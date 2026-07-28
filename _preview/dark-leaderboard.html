@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Dark Leaderboard · Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0c;--card:#16161b;--card2:#1d1d24;--bd:rgba(255,255,255,.07);
+  --tx:#ececed;--mut:rgba(236,236,237,.45);--mut2:rgba(236,236,237,.68);
+  --accent:#4f8fe0;--glow:rgba(79,143,224,.16);
+  --gold:#f5c451;--silver:#b9b9c2;--bronze:#d98a4a;
+  --serif:'EB Garamond',Georgia,serif;--sans:'DM Sans',-apple-system,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--tx);font-family:var(--sans);min-height:100vh}
+.wrap{max-width:900px;margin:0 auto;padding-bottom:40px}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:#050506;border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:5}
+.lg{font-family:var(--serif);font-size:15px;color:#fff}
+.board-sel{background:transparent;color:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.16);border-radius:99px;padding:7px 32px 7px 14px;font-family:var(--sans);font-size:12px;font-weight:500;cursor:pointer;
+  appearance:none;background-image:linear-gradient(45deg,transparent 50%,rgba(255,255,255,.6) 50%),linear-gradient(135deg,rgba(255,255,255,.6) 50%,transparent 50%);background-position:calc(100% - 17px) 50%,calc(100% - 12px) 50%;background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+.board-sel option{background:#16161b;color:#fff}
+.hd{padding:20px 20px 0}
+.eyebrow{font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--accent)}
+.title{font-family:var(--serif);font-size:44px;line-height:.95;margin-top:6px;color:#fff}
+.tabs{display:flex;gap:22px;padding:16px 20px 0;overflow-x:auto;border-bottom:1px solid var(--bd);margin-top:14px}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;font-size:13px;color:var(--mut2);white-space:nowrap;padding:0 0 12px;border:none;background:none;font-family:var(--sans);border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer;transition:color .15s}
+.tab:hover{color:var(--tx)}
+.tab.on{color:#fff;border-bottom-color:var(--accent)}
+.podium{display:grid;grid-template-columns:1fr 1.18fr 1fr;gap:12px;align-items:end;padding:26px 18px 20px}
+.pc{background:var(--card);border:1px solid var(--bd);border-radius:20px;padding:18px 10px 16px;display:flex;flex-direction:column;align-items:center;text-align:center}
+.pc.first{background:var(--card2);border-color:rgba(245,196,81,.3);padding:24px 12px 20px;box-shadow:0 0 34px var(--glow)}
+.avwrap{position:relative;margin-bottom:11px}
+.av{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;color:#fff}
+.pc.first .av{width:68px;height:68px;font-size:22px;border:2px solid var(--gold)}
+.pc.second .av,.pc.third .av{width:54px;height:54px;font-size:17px}
+.pc.third .av{border:2px solid var(--bronze)}
+.badge{position:absolute;bottom:-3px;right:-3px;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#141418;border:2px solid var(--card)}
+.pc.first .badge{border-color:var(--card2)}
+.first .badge{background:var(--gold)}.second .badge{background:var(--silver)}.third .badge{background:var(--bronze)}
+.pnm{font-size:13px;font-weight:600;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.pc.first .pnm{font-size:14px}
+.pscore{font-size:28px;font-weight:700;color:var(--accent);margin-top:10px;line-height:1}
+.pc.first .pscore{font-size:33px}
+.plabel{font-size:8px;font-weight:600;letter-spacing:1.5px;color:var(--mut);text-transform:uppercase;margin-top:3px}
+.psub{font-size:11px;color:var(--mut2);margin-top:8px;display:flex;gap:6px;align-items:center;justify-content:center;flex-wrap:wrap}
+.psub b{color:var(--tx);font-weight:600}
+.dot{width:3px;height:3px;border-radius:50%;background:var(--mut);display:inline-block}
+.list{padding:2px 14px 8px}
+.lh{display:grid;grid-template-columns:30px 1fr 64px 62px;gap:12px;padding:10px 10px;font-size:9px;font-weight:600;letter-spacing:1px;color:var(--mut);text-transform:uppercase}
+.lh .r{text-align:right}
+.row{display:grid;grid-template-columns:30px 1fr 64px 62px;gap:12px;align-items:center;padding:12px 10px;border-radius:14px;transition:background .15s}
+.row:hover{background:var(--card)}
+.rk{font-size:14px;font-weight:600;color:var(--mut2);text-align:center}
+.pl{display:flex;align-items:center;gap:11px;min-width:0}
+.plav{width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#fff}
+.plt{min-width:0}
+.nmrow{display:flex;align-items:center;min-width:0}
+.pln{font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.plr{font-size:11px;color:var(--mut);margin-top:2px}
+.mt{text-align:right;font-size:15px;font-weight:600;color:var(--mut2)}
+.mt small{display:block;font-size:8px;letter-spacing:1px;text-transform:uppercase;color:var(--mut);font-weight:600}
+.rt{text-align:right;font-size:18px;font-weight:700;color:var(--accent)}
+/* Verified badge */
+.vb{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;flex-shrink:0;margin-left:6px;font-size:9px;font-weight:800;line-height:1}
+.vb.yes{background:#2ecb82;color:#06170e}
+.vb.no{background:transparent;border:1.4px dashed var(--mut)}
+.pnmrow{display:flex;align-items:center;justify-content:center;max-width:100%}
+.legend{display:flex;align-items:center;gap:7px;padding:0 22px 10px;font-size:11px;color:var(--mut)}
+.legend .vb{margin-left:0}
+.legend .sep{width:1px;height:11px;background:var(--bd);margin:0 4px}
+.note{padding:14px 24px;font-family:var(--serif);font-style:italic;color:var(--mut);font-size:13px}
+@media(max-width:620px){
+  .title{font-size:38px}
+  .podium{gap:8px;padding:22px 14px 16px}
+  .pc{padding:14px 6px 12px}.pc.first{padding:18px 8px 16px}
+  .lh,.row{grid-template-columns:26px 1fr 52px 50px;gap:8px;padding-left:6px;padding-right:6px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <span class="lg">//PadelCollective</span>
+    <select class="board-sel" id="boardSel">
+      <option value="firstserve">First Serve</option>
+      <option value="breakpoint">Break Point</option>
+    </select>
+  </div>
+  <div class="hd">
+    <div class="eyebrow">Leaderboard</div>
+    <div class="title" id="boardTitle">First Serve</div>
+  </div>
+  <div class="tabs" id="tabs">
+    <button class="tab on" data-tab="ranking">Ranking</button>
+    <button class="tab" data-tab="americano">Americano</button>
+    <button class="tab" data-tab="games">Games</button>
+    <button class="tab" data-tab="tournament">Tournament</button>
+  </div>
+  <div class="podium" id="podium"></div>
+  <div class="legend">
+    <span class="vb yes">✓</span> Verified ranking
+  </div>
+  <div class="list">
+    <div class="lh"><span>#</span><span>Player</span><span class="r">Rating</span><span class="r">Score</span></div>
+    <div id="rows"></div>
+  </div>
+  <div class="note" id="note"></div>
+</div>
+<script>
+const AVCOLORS=['#9d7bc9','#5b6472','#2f8f83','#c1614f','#3f9d7f','#7c6fc9','#b1793f','#4f7cc1','#a85a86','#3d8f8f'];
+function initials(n){const p=String(n).trim().split(/\s+/);return (p.length===1?p[0].slice(0,2):p[0][0]+p[p.length-1][0]).toUpperCase();}
+function col(n){let h=0;for(const c of n)h=(h*31+c.charCodeAt(0))>>>0;return AVCOLORS[h%AVCOLORS.length];}
+
+// [name, score, matches, rating, verified]
+const DATA={
+  firstserve:{title:'First Serve', accent:'#4f8fe0', glow:'rgba(79,143,224,.16)', players:[
+    ['Aadarsh R',91,14,3.8,true],['PB Sashank',77,12,3.6,true],['Chandraditya R',72,11,3.5,true],['Nirmit',68,13,3.4,false],
+    ['Adibir Singh',61,6,3.3,true],['Nirvaan',58,9,3.3,true],['Denny',52,3,3.2,false],['Swayam',49,15,3.1,true],
+    ['Ananmay',44,10,3.0,true],['Vikram S',40,8,2.9,false],['Eshan C',37,7,2.8,true],['Sharan',33,6,2.7,true]
+  ]},
+  breakpoint:{title:'Break Point', accent:'#e88a37', glow:'rgba(232,138,55,.16)', players:[
+    ['Nik S',96,11,3.5,true],['Aditya A',93,12,3.5,true],['Prabh',78,9,3.4,true],['Tansheer',74,13,3.3,false],
+    ['Ayush J',68,10,3.3,true],['Nimish B',55,7,3.2,true],['Harshal',52,8,3.1,false],['Parth G',51,6,3.1,true],
+    ['Apoorav',37,5,3.0,true],['Rudraksha',30,6,2.9,true],['Aman',26,4,2.8,false],['Raunaq',22,5,2.7,true]
+  ]}
+};
+const NOTES={ranking:'Overall standings by score.',americano:'Americano points across all sessions.',games:'Casual games played and won.',tournament:'Knockout tournament results.'};
+
+let board='firstserve', tab='ranking';
+
+function render(){
+  const d=DATA[board];
+  document.documentElement.style.setProperty('--accent', d.accent);
+  document.documentElement.style.setProperty('--glow', d.glow);
+  document.getElementById('boardTitle').textContent=d.title;
+  const players=[...d.players].sort((a,b)=>b[1]-a[1]).map((p,i)=>({rank:i+1,name:p[0],score:p[1],matches:p[2],rating:p[3],verified:p[4]}));
+  const vb=p=> p.verified ? '<span class="vb yes" title="Verified ranking">✓</span>' : '';
+  const top3=players.slice(0,3), rest=players.slice(3);
+  const slots=[top3[1],top3[0],top3[2]], cls=['second','first','third'];
+  document.getElementById('podium').innerHTML=slots.map((p,i)=>{
+    if(!p)return `<div class="pc ${cls[i]}"></div>`;
+    return `<div class="pc ${cls[i]}">
+      <div class="avwrap"><div class="av" style="background:${col(p.name)}">${initials(p.name)}</div><div class="badge">${p.rank}</div></div>
+      <div class="pnmrow"><span class="pnm">${p.name}</span>${vb(p)}</div>
+      <div class="pscore">${p.score}</div><div class="plabel">Score</div>
+      <div class="psub"><span><b>${p.matches}</b> matches</span><span class="dot"></span><span><b>${p.rating.toFixed(1)}</b> rating</span></div>
+    </div>`;
+  }).join('');
+  document.getElementById('rows').innerHTML=rest.map(p=>`
+    <div class="row">
+      <div class="rk">${p.rank}</div>
+      <div class="pl"><div class="plav" style="background:${col(p.name)}">${initials(p.name)}</div>
+        <div class="plt"><div class="nmrow"><span class="pln">${p.name}</span>${vb(p)}</div><div class="plr">${p.matches} matches</div></div></div>
+      <div class="mt">${p.rating.toFixed(1)}<small>rating</small></div>
+      <div class="rt">${p.score}</div>
+    </div>`).join('');
+  document.getElementById('note').textContent=NOTES[tab];
+}
+document.getElementById('boardSel').addEventListener('change',e=>{board=e.target.value;render();});
+document.getElementById('tabs').addEventListener('click',e=>{
+  const b=e.target.closest('.tab');if(!b)return;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  b.classList.add('on');tab=b.dataset.tab;render();
+});
+render();
+</script>
+</body>
+</html>

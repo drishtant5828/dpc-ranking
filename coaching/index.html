@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Delhi//PadelCollective — Coaching</title>
+<meta name="description" content="Book private padel coaching sessions with Delhi Padel Collective coaches across Delhi NCR. Choose your coach, location and slot — pay online, confirmed instantly."/>
+<link rel="icon" type="image/png" href="../logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="config.js"></script>
+<style>
+@font-face {
+  font-family: 'Berling';
+  src: url('../Berling Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+}
+:root {
+  --font-heading: 'Berling', Georgia, serif;
+  --font-body: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  --bg: #f7f5f2;
+  --surface: #ffffff;
+  --surface-hover: #f0ede9;
+  --text: #171513;
+  --muted: rgba(0,0,0,.38);
+  --border-soft: rgba(0,0,0,.08);
+  --border-strong: rgba(0,0,0,.14);
+  --accent: #CB5957;
+  --accent-hover: #b84d4c;
+  --accent-glow: rgba(203,89,87,.35);
+  --accent-light: rgba(203,89,87,.12);
+  --success: #4a8c42;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 14px; min-height: 100vh; }
+
+/* ── HEADER ── */
+header {
+  background: rgba(247,245,242,.94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-soft);
+  padding: 0 24px; height: 58px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 100;
+}
+.logo {
+  font-family: var(--font-heading); font-weight: 700; font-size: 15px;
+  color: var(--text); letter-spacing: 1.5px; text-transform: uppercase; text-decoration: none;
+}
+.header-right { display: flex; align-items: center; gap: 14px; }
+.demo-pill {
+  font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--accent); background: var(--accent-light);
+  padding: 5px 12px; border-radius: 100px; display: none;
+}
+.demo-pill.show { display: inline-block; }
+.my-sessions-btn {
+  font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--muted); background: none; border: none; cursor: pointer; transition: color .2s;
+  font-family: var(--font-body);
+}
+.my-sessions-btn:hover { color: var(--text); }
+
+/* ── HERO ── */
+.hero { padding: 52px 24px 36px; max-width: 680px; margin: 0 auto; }
+.hero-eyebrow { font-size: 9px; font-weight: 600; letter-spacing: 4px; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+.hero h1 { font-family: var(--font-heading); font-size: clamp(36px, 8vw, 56px); font-weight: 700; line-height: .98; letter-spacing: -.5px; margin-bottom: 14px; }
+.hero p { font-size: 14px; color: var(--muted); line-height: 1.75; font-weight: 300; max-width: 460px; }
+
+/* ── STEPPER ── */
+.wrap { max-width: 680px; margin: 0 auto; padding: 0 24px 100px; }
+.stepper {
+  display: flex; align-items: center; gap: 8px;
+  padding: 18px 0 26px; overflow-x: auto; scrollbar-width: none;
+}
+.stepper::-webkit-scrollbar { display: none; }
+.step-dot {
+  display: flex; align-items: center; gap: 8px; flex-shrink: 0;
+  font-size: 9px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+  color: rgba(0,0,0,.24); white-space: nowrap;
+}
+.step-dot .n {
+  width: 22px; height: 22px; border-radius: 50%;
+  border: 1.5px solid var(--border-strong);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700; color: rgba(0,0,0,.3);
+  transition: all .25s;
+}
+.step-dot.active { color: var(--text); }
+.step-dot.active .n { background: var(--text); border-color: var(--text); color: #fff; }
+.step-dot.done .n { background: var(--success); border-color: var(--success); color: #fff; }
+.step-dot.done { color: var(--success); cursor: pointer; }
+.step-line { flex: 1; min-width: 14px; height: 1px; background: var(--border-soft); }
+
+/* ── PANELS ── */
+.panel { display: none; animation: fadeUp .45s ease both; }
+.panel.active { display: block; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+.panel-title { font-family: var(--font-heading); font-size: 26px; font-weight: 700; margin-bottom: 6px; }
+.panel-sub { font-size: 13px; color: var(--muted); font-weight: 300; margin-bottom: 24px; }
+
+/* ── OPTION CARDS (locations) ── */
+.opt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.opt-card {
+  background: var(--surface); border: 1.5px solid var(--border-soft); border-radius: 6px;
+  padding: 20px 18px; cursor: pointer; transition: all .2s; text-align: left;
+  font-family: var(--font-body);
+}
+.opt-card:hover { border-color: var(--border-strong); background: var(--surface-hover); }
+.opt-card.selected { border-color: var(--accent); background: var(--accent-light); }
+.opt-card h3 { font-family: var(--font-heading); font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.opt-card .meta { font-size: 11px; color: var(--muted); letter-spacing: .3px; }
+
+/* ── COACH CARDS ── */
+.coach-list { display: flex; flex-direction: column; gap: 12px; }
+.coach-card {
+  background: var(--surface); border: 1.5px solid var(--border-soft); border-radius: 6px;
+  padding: 18px; cursor: pointer; transition: all .2s;
+  display: flex; gap: 16px; align-items: flex-start; text-align: left; width: 100%;
+  font-family: var(--font-body);
+}
+.coach-card:hover { border-color: var(--border-strong); background: var(--surface-hover); }
+.coach-card.selected { border-color: var(--accent); background: var(--accent-light); }
+.coach-avatar {
+  width: 58px; height: 58px; border-radius: 50%; flex-shrink: 0;
+  background: var(--surface-hover); border: 1px solid var(--border-soft);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-heading); font-size: 20px; font-weight: 700; color: var(--accent);
+  overflow: hidden;
+}
+.coach-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.coach-info { flex: 1; min-width: 0; }
+.coach-name { font-family: var(--font-heading); font-size: 18px; font-weight: 700; }
+.coach-stars { color: var(--accent); font-size: 11px; letter-spacing: 2px; margin: 2px 0 4px; }
+.coach-stars .cnt { color: var(--muted); letter-spacing: 0; font-size: 10px; margin-left: 4px; }
+.coach-level { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+.coach-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.coach-tag { font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: rgba(0,0,0,.44); border: 1px solid var(--border-soft); border-radius: 100px; padding: 3px 9px; }
+.coach-price { text-align: right; flex-shrink: 0; }
+.coach-price .from { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); display: block; }
+.coach-price .amt { font-family: var(--font-heading); font-size: 18px; font-weight: 700; }
+
+/* ── DATE STRIP ── */
+.date-strip { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; margin-bottom: 22px; }
+.date-strip::-webkit-scrollbar { display: none; }
+.date-chip {
+  flex-shrink: 0; width: 62px; padding: 12px 0 10px; border-radius: 6px;
+  background: var(--surface); border: 1.5px solid var(--border-soft);
+  text-align: center; cursor: pointer; transition: all .2s; font-family: var(--font-body);
+}
+.date-chip:hover { border-color: var(--border-strong); }
+.date-chip.selected { border-color: var(--accent); background: var(--accent-light); }
+.date-chip .dow { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 4px; }
+.date-chip .dom { font-family: var(--font-heading); font-size: 19px; font-weight: 700; display: block; }
+.date-chip .mon { font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+
+/* ── SLOT GRID ── */
+.slot-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.slot-btn {
+  padding: 12px 0 10px; border-radius: 6px; background: var(--surface);
+  border: 1.5px solid var(--border-soft); font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: all .2s; font-family: var(--font-body); color: var(--text);
+}
+.slot-btn .sub {
+  display: block; font-size: 9px; font-weight: 600; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--muted); margin-top: 4px;
+}
+.slot-btn .sub.join { color: var(--accent); }
+.slot-btn:hover:not(:disabled) { border-color: var(--border-strong); }
+.slot-btn.selected { border-color: var(--accent); background: var(--accent-light); font-weight: 700; }
+.slot-btn:disabled { color: rgba(0,0,0,.2); background: transparent; cursor: not-allowed; }
+.slot-btn:disabled .sub { color: rgba(0,0,0,.2); }
+.empty-note { font-size: 13px; color: var(--muted); font-weight: 300; padding: 24px 0; text-align: center; }
+
+/* ── SESSION TYPES ── */
+.type-list { display: flex; flex-direction: column; gap: 12px; }
+.type-card {
+  background: var(--surface); border: 1.5px solid var(--border-soft); border-radius: 6px;
+  padding: 18px 20px; cursor: pointer; transition: all .2s;
+  display: flex; align-items: center; justify-content: space-between; width: 100%;
+  font-family: var(--font-body); text-align: left;
+}
+.type-card:hover { border-color: var(--border-strong); }
+.type-card.selected { border-color: var(--accent); background: var(--accent-light); }
+.type-card h3 { font-family: var(--font-heading); font-size: 17px; font-weight: 700; margin-bottom: 3px; }
+.type-card .meta { font-size: 11px; color: var(--muted); }
+.type-price { text-align: right; }
+.type-price .amt { font-family: var(--font-heading); font-size: 18px; font-weight: 700; }
+.type-price .per { font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); display: block; }
+.type-total { font-size: 13px; color: var(--muted); margin-top: 18px; text-align: right; }
+.type-total strong { font-family: var(--font-heading); font-size: 20px; color: var(--text); margin-left: 8px; }
+.join-banner {
+  background: var(--accent-light); border: 1.5px solid rgba(203,89,87,.3);
+  border-radius: 6px; padding: 16px 18px; margin-bottom: 14px;
+  font-size: 12px; color: rgba(0,0,0,.55); line-height: 1.7;
+}
+.join-banner strong { color: var(--text); }
+
+/* ── FORM ── */
+.form-grid { display: flex; flex-direction: column; gap: 16px; }
+.field label { display: block; font-size: 9px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 7px; }
+.field input, .field select, .field textarea {
+  width: 100%; padding: 13px 14px; border-radius: 6px;
+  background: var(--surface); border: 1.5px solid var(--border-soft);
+  font-family: var(--font-body); font-size: 14px; color: var(--text);
+  transition: border-color .2s; -webkit-appearance: none; appearance: none;
+}
+.field textarea { resize: vertical; min-height: 70px; }
+.field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--accent); }
+.field .err { font-size: 11px; color: var(--accent); margin-top: 5px; display: none; }
+.field.invalid input { border-color: var(--accent); }
+.field.invalid .err { display: block; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* ── REVIEW ── */
+.review-card { background: var(--surface); border: 1px solid var(--border-soft); border-radius: 6px; overflow: hidden; }
+.review-row { display: flex; justify-content: space-between; align-items: baseline; padding: 14px 20px; border-bottom: 1px solid var(--border-soft); }
+.review-row:last-child { border-bottom: none; }
+.review-row .k { font-size: 9px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+.review-row .v { font-size: 14px; font-weight: 500; text-align: right; }
+.review-row.total { background: var(--surface-hover); }
+.review-row.total .v { font-family: var(--font-heading); font-size: 22px; font-weight: 700; }
+.pay-note { font-size: 11px; color: var(--muted); line-height: 1.7; margin-top: 16px; text-align: center; }
+
+/* ── CONFIRMATION ── */
+.confirm-wrap { text-align: center; padding: 28px 0 8px; }
+.confirm-check {
+  width: 64px; height: 64px; border-radius: 50%; background: var(--success);
+  color: #fff; font-size: 28px; display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 22px; animation: pop .5s cubic-bezier(.68,-.55,.27,1.55) both;
+}
+@keyframes pop { from { transform: scale(.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.confirm-wrap h2 { font-family: var(--font-heading); font-size: 30px; font-weight: 700; margin-bottom: 6px; }
+.confirm-id { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 26px; }
+.confirm-id strong { color: var(--accent); letter-spacing: 1px; }
+.confirm-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 26px; }
+
+/* ── BUTTONS ── */
+.btn-row { display: flex; gap: 10px; margin-top: 28px; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 15px 30px; border-radius: 100px; border: none; cursor: pointer;
+  font-family: var(--font-body); font-size: 11px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase; transition: all .22s;
+  text-decoration: none;
+}
+.btn-accent { background: var(--accent); color: #fff; flex: 1; }
+.btn-accent:hover { background: var(--accent-hover); box-shadow: 0 6px 28px var(--accent-glow); }
+.btn-accent:disabled { opacity: .5; cursor: not-allowed; box-shadow: none; }
+.btn-ghost { background: transparent; color: rgba(0,0,0,.52); border: 1.5px solid var(--border-soft); }
+.btn-ghost:hover { background: rgba(0,0,0,.03); color: var(--text); border-color: var(--border-strong); }
+.spinner {
+  width: 14px; height: 14px; border: 2px solid rgba(255,255,255,.35);
+  border-top-color: #fff; border-radius: 50%;
+  animation: spin .7s linear infinite; display: none;
+}
+.btn.loading .spinner { display: inline-block; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.error-banner {
+  background: var(--accent-light); border: 1px solid rgba(203,89,87,.3);
+  color: var(--accent-hover); border-radius: 6px; padding: 13px 16px;
+  font-size: 12px; margin-top: 16px; display: none;
+}
+.error-banner.show { display: block; }
+
+/* ── MY SESSIONS MODAL ── */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.3); backdrop-filter: blur(4px);
+  z-index: 300; display: none; align-items: flex-end; justify-content: center;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--surface); border-radius: 14px 14px 0 0; width: 100%; max-width: 680px;
+  max-height: 80vh; overflow-y: auto; padding: 28px 24px 40px;
+  animation: slideUp .35s cubic-bezier(.32,.72,0,1) both;
+}
+@keyframes slideUp { from { transform: translateY(60px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.modal h3 { font-family: var(--font-heading); font-size: 22px; font-weight: 700; margin-bottom: 18px; }
+.session-item { border: 1px solid var(--border-soft); border-radius: 6px; padding: 16px; margin-bottom: 10px; }
+.session-item .top { display: flex; justify-content: space-between; margin-bottom: 6px; }
+.session-item .coach { font-family: var(--font-heading); font-weight: 700; font-size: 16px; }
+.session-item .status { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--success); font-weight: 700; }
+.session-item .detail { font-size: 12px; color: var(--muted); }
+
+@media (min-width: 640px) {
+  .modal-overlay { align-items: center; }
+  .modal { border-radius: 14px; }
+  header { padding: 0 40px; }
+  .slot-grid { grid-template-columns: repeat(4, 1fr); }
+}
+@media (max-width: 400px) {
+  .opt-grid { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="logo" href="../">Delhi//PadelCollective</a>
+  <div class="header-right">
+    <span class="demo-pill" id="demoPill">Demo Mode</span>
+    <button class="my-sessions-btn" id="mySessionsBtn">My Sessions</button>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-eyebrow">Private Coaching</div>
+  <h1>Book a coach.</h1>
+  <p>Pick your coach, location and time — pay online and you're confirmed instantly. No DMs, no back and forth.</p>
+</div>
+
+<div class="wrap">
+
+  <div class="stepper" id="stepper">
+    <div class="step-dot" data-step="1"><span class="n">1</span><span>Location</span></div>
+    <div class="step-line"></div>
+    <div class="step-dot" data-step="2"><span class="n">2</span><span>Coach</span></div>
+    <div class="step-line"></div>
+    <div class="step-dot" data-step="3"><span class="n">3</span><span>Slot</span></div>
+    <div class="step-line"></div>
+    <div class="step-dot" data-step="4"><span class="n">4</span><span>Type</span></div>
+    <div class="step-line"></div>
+    <div class="step-dot" data-step="5"><span class="n">5</span><span>Details</span></div>
+    <div class="step-line"></div>
+    <div class="step-dot" data-step="6"><span class="n">6</span><span>Pay</span></div>
+  </div>
+
+  <!-- STEP 1 — LOCATION -->
+  <section class="panel active" id="panel-1">
+    <h2 class="panel-title">Where do you want to train?</h2>
+    <p class="panel-sub">Choose a court location in Delhi NCR.</p>
+    <div class="opt-grid" id="locationGrid"><p class="empty-note">Loading locations…</p></div>
+  </section>
+
+  <!-- STEP 2 — COACH -->
+  <section class="panel" id="panel-2">
+    <h2 class="panel-title">Choose your coach</h2>
+    <p class="panel-sub" id="coachSub">Coaches available at this location.</p>
+    <div class="coach-list" id="coachList"></div>
+    <div class="btn-row"><button class="btn btn-ghost" data-back="1">Back</button></div>
+  </section>
+
+  <!-- STEP 3 — DATE + SLOT -->
+  <section class="panel" id="panel-3">
+    <h2 class="panel-title">Pick a date &amp; time</h2>
+    <p class="panel-sub">Sessions are 60 minutes. Open slots let you start a session; slots marked <b>join</b> have a group forming — grab a spot and pay only your share.</p>
+    <div class="date-strip" id="dateStrip"></div>
+    <div class="slot-grid" id="slotGrid"></div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" data-back="2">Back</button>
+      <button class="btn btn-accent" id="toStep4" disabled>Continue</button>
+    </div>
+  </section>
+
+  <!-- STEP 4 — SESSION TYPE -->
+  <section class="panel" id="panel-4">
+    <h2 class="panel-title" id="typeTitle">Session type</h2>
+    <p class="panel-sub" id="typeSub">The session price splits across the group — you pay only your share. Remaining spots stay open for others to join.</p>
+    <div id="joinBanner"></div>
+    <div class="type-list" id="typeList"></div>
+    <div class="type-total" id="typeTotal"></div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" data-back="3">Back</button>
+      <button class="btn btn-accent" id="toStep5" disabled>Continue</button>
+    </div>
+  </section>
+
+  <!-- STEP 5 — DETAILS -->
+  <section class="panel" id="panel-5">
+    <h2 class="panel-title">Your details</h2>
+    <p class="panel-sub">Confirmation and reminders go to your phone &amp; email.</p>
+    <div class="form-grid">
+      <div class="field" id="f-name">
+        <label for="inName">Full name *</label>
+        <input id="inName" type="text" autocomplete="name" placeholder="Your name"/>
+        <div class="err">Please enter your name</div>
+      </div>
+      <div class="form-row">
+        <div class="field" id="f-phone">
+          <label for="inPhone">Phone *</label>
+          <input id="inPhone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="98XXXXXXXX"/>
+          <div class="err">Enter a valid 10-digit number</div>
+        </div>
+        <div class="field" id="f-email">
+          <label for="inEmail">Email *</label>
+          <input id="inEmail" type="email" autocomplete="email" placeholder="you@email.com"/>
+          <div class="err">Enter a valid email</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label for="inSkill">Skill level</label>
+          <select id="inSkill">
+            <option value="">Select (optional)</option>
+            <option>Never played</option>
+            <option>Beginner</option>
+            <option>Intermediate</option>
+            <option>Advanced</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="inRequest">Special request</label>
+          <input id="inRequest" type="text" placeholder="Optional"/>
+        </div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" data-back="4">Back</button>
+      <button class="btn btn-accent" id="toStep6">Review Booking</button>
+    </div>
+  </section>
+
+  <!-- STEP 6 — REVIEW + PAY -->
+  <section class="panel" id="panel-6">
+    <h2 class="panel-title">Review &amp; pay</h2>
+    <p class="panel-sub">Check everything looks right, then pay to confirm.</p>
+    <div class="review-card" id="reviewCard"></div>
+    <div class="error-banner" id="payError"></div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" data-back="5">Back</button>
+      <button class="btn btn-accent" id="payBtn"><span class="spinner"></span><span id="payBtnLabel">Pay</span></button>
+    </div>
+    <p class="pay-note">Payments are processed securely by Razorpay — UPI, cards, net banking &amp; wallets.<br/>Free cancellation up to 12 hours before your session.</p>
+  </section>
+
+  <!-- STEP 7 — CONFIRMED -->
+  <section class="panel" id="panel-7">
+    <div class="confirm-wrap">
+      <div class="confirm-check">✓</div>
+      <h2>You're booked.</h2>
+      <p class="confirm-id">Booking ID <strong id="confirmId"></strong></p>
+      <div class="review-card" id="confirmCard" style="text-align:left"></div>
+      <div id="groupNote"></div>
+      <div class="confirm-actions">
+        <a class="btn btn-ghost" id="calBtn" download="dpc-coaching.ics">Add to Calendar</a>
+        <button class="btn btn-ghost" id="shareBtn">Share</button>
+        <button class="btn btn-accent" id="newBookingBtn">Book Another</button>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- MY SESSIONS -->
+<div class="modal-overlay" id="sessionsModal">
+  <div class="modal">
+    <h3>My Sessions</h3>
+    <div class="field" style="margin-bottom:16px">
+      <label for="lookupPhone">Phone number used while booking</label>
+      <input id="lookupPhone" type="tel" inputmode="numeric" placeholder="98XXXXXXXX"/>
+    </div>
+    <button class="btn btn-accent" id="lookupBtn" style="width:100%">Find My Bookings</button>
+    <div id="sessionsList" style="margin-top:18px"></div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+//  Booking flow state machine
+// ============================================================
+const S = {
+  step: 1,
+  location: null,
+  coach: null,
+  date: null,
+  slot: null,
+  slotsByDate: {},
+  type: null,
+  details: {},
+  booking: null,
+};
+
+const $ = (id) => document.getElementById(id);
+
+if (DEMO_MODE) $("demoPill").classList.add("show");
+
+// ── Navigation ──────────────────────────────────────────────
+function goTo(step) {
+  S.step = step;
+  document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+  $(`panel-${step}`).classList.add("active");
+  document.querySelectorAll(".step-dot").forEach(d => {
+    const n = Number(d.dataset.step);
+    d.classList.toggle("active", n === step);
+    d.classList.toggle("done", n < step && step <= 6);
+  });
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+document.querySelectorAll("[data-back]").forEach(b =>
+  b.addEventListener("click", () => goTo(Number(b.dataset.back))));
+document.querySelectorAll(".step-dot").forEach(d =>
+  d.addEventListener("click", () => {
+    const n = Number(d.dataset.step);
+    if (d.classList.contains("done") && S.step <= 6) goTo(n);
+  }));
+
+// ── Step 1: locations ───────────────────────────────────────
+async function loadLocations() {
+  try {
+    const locs = await API.fetchLocations();
+    $("locationGrid").innerHTML = "";
+    locs.forEach(loc => {
+      const btn = document.createElement("button");
+      btn.className = "opt-card";
+      btn.innerHTML = `<h3>${loc.name}</h3><div class="meta">${loc.area || ""} · ${loc.courts} court${loc.courts > 1 ? "s" : ""}</div>`;
+      btn.addEventListener("click", () => {
+        S.location = loc;
+        loadCoaches();
+        goTo(2);
+      });
+      $("locationGrid").appendChild(btn);
+    });
+  } catch (e) {
+    $("locationGrid").innerHTML = `<p class="empty-note">Couldn't load locations — please refresh.</p>`;
+  }
+}
+
+// ── Step 2: coaches ─────────────────────────────────────────
+function stars(rating) {
+  return "★".repeat(Math.round(rating));
+}
+async function loadCoaches() {
+  $("coachSub").textContent = `Coaches available at ${S.location.name}.`;
+  $("coachList").innerHTML = `<p class="empty-note">Loading coaches…</p>`;
+  try {
+    const coaches = await API.fetchCoaches(S.location.id);
+    $("coachList").innerHTML = "";
+    if (!coaches.length) {
+      $("coachList").innerHTML = `<p class="empty-note">No coaches at this location yet — try another.</p>`;
+      return;
+    }
+    coaches.forEach(c => {
+      const minPrice = sharePrice(c.session_price, "1:3");
+      const initials = c.name.split(" ").map(w => w[0]).join("").slice(0, 2);
+      const btn = document.createElement("button");
+      btn.className = "coach-card";
+      btn.innerHTML = `
+        <div class="coach-avatar">${c.photo ? `<img src="${c.photo}" alt="${c.name}"/>` : initials}</div>
+        <div class="coach-info">
+          <div class="coach-name">${c.name}</div>
+          <div class="coach-stars">${stars(c.rating)}<span class="cnt">${c.rating} · ${c.reviews} reviews</span></div>
+          <div class="coach-level">${c.level} · ${c.experience} experience</div>
+          <div class="coach-tags">
+            <span class="coach-tag">${c.specialty}</span>
+          </div>
+        </div>
+        <div class="coach-price"><span class="from">From</span><span class="amt">₹${minPrice.toLocaleString("en-IN")}</span></div>`;
+      btn.addEventListener("click", () => {
+        S.coach = c;
+        loadSlots();
+        goTo(3);
+      });
+      $("coachList").appendChild(btn);
+    });
+  } catch (e) {
+    $("coachList").innerHTML = `<p class="empty-note">Couldn't load coaches — please refresh.</p>`;
+  }
+}
+
+// ── Step 3: dates & slots ───────────────────────────────────
+async function loadSlots() {
+  S.date = null; S.slot = null;
+  $("toStep4").disabled = true;
+  $("dateStrip").innerHTML = "";
+  $("slotGrid").innerHTML = `<p class="empty-note" style="grid-column:1/-1">Loading availability…</p>`;
+  try {
+    S.slotsByDate = await API.fetchSlots(S.coach.id, S.location.id);
+    const dates = Object.keys(S.slotsByDate).filter(d => S.slotsByDate[d].some(s => s.status === "open"));
+    if (!dates.length) {
+      $("slotGrid").innerHTML = `<p class="empty-note" style="grid-column:1/-1">No open slots in the next two weeks — try another coach.</p>`;
+      return;
+    }
+    dates.forEach((dateStr, i) => {
+      const [y, m, d] = dateStr.split("-").map(Number);
+      const dt = new Date(y, m - 1, d);
+      const chip = document.createElement("button");
+      chip.className = "date-chip";
+      chip.innerHTML = `
+        <span class="dow">${dt.toLocaleDateString("en-IN", { weekday: "short" })}</span>
+        <span class="dom">${dt.getDate()}</span>
+        <span class="mon">${dt.toLocaleDateString("en-IN", { month: "short" })}</span>`;
+      chip.addEventListener("click", () => selectDate(dateStr, chip));
+      $("dateStrip").appendChild(chip);
+      if (i === 0) selectDate(dateStr, chip);
+    });
+  } catch (e) {
+    $("slotGrid").innerHTML = `<p class="empty-note" style="grid-column:1/-1">Couldn't load slots — please refresh.</p>`;
+  }
+}
+
+function slotSubLabel(slot) {
+  if (slot.status !== "open") return `<span class="sub">Full</span>`;
+  if (!slot.session_type) return `<span class="sub">Open</span>`;
+  const left = slot.capacity - slot.spots_taken;
+  const share = sharePrice(S.coach.session_price, slot.session_type);
+  return `<span class="sub join">Join ${slot.session_type} · ${left} spot${left > 1 ? "s" : ""} · ₹${share.toLocaleString("en-IN")}</span>`;
+}
+
+function selectDate(dateStr, chip) {
+  S.date = dateStr; S.slot = null;
+  $("toStep4").disabled = true;
+  document.querySelectorAll(".date-chip").forEach(c => c.classList.remove("selected"));
+  chip.classList.add("selected");
+  $("slotGrid").innerHTML = "";
+  S.slotsByDate[dateStr].forEach(slot => {
+    const b = document.createElement("button");
+    b.className = "slot-btn";
+    b.innerHTML = formatTime12(slot.start_time) + slotSubLabel(slot);
+    if (slot.status !== "open") b.disabled = true;
+    else b.addEventListener("click", () => {
+      S.slot = slot;
+      document.querySelectorAll(".slot-btn").forEach(x => x.classList.remove("selected"));
+      b.classList.add("selected");
+      $("toStep4").disabled = false;
+    });
+    $("slotGrid").appendChild(b);
+  });
+}
+$("toStep4").addEventListener("click", () => { renderTypes(); goTo(4); });
+
+// ── Step 4: session type ────────────────────────────────────
+// If the slot is unclaimed the booker picks the format (and sets the
+// per-person price for whoever joins after). If a group is already
+// forming, the format is fixed — they just take a spot.
+function selectType(t, card) {
+  S.type = { ...t, price: sharePrice(S.coach.session_price, t.id), total: S.coach.session_price };
+  document.querySelectorAll(".type-card").forEach(c => c.classList.remove("selected"));
+  card.classList.add("selected");
+  $("typeTotal").innerHTML = `You pay your share now<strong>₹${S.type.price.toLocaleString("en-IN")}</strong>`;
+  $("toStep5").disabled = false;
+}
+
+function typeCard(t) {
+  const price = sharePrice(S.coach.session_price, t.id);
+  const card = document.createElement("button");
+  card.className = "type-card";
+  card.innerHTML = `
+    <div><h3>${t.label}</h3><div class="meta">${t.players} player${t.players > 1 ? "s" : ""} · 60 min · session ₹${S.coach.session_price.toLocaleString("en-IN")}</div></div>
+    <div class="type-price"><span class="amt">₹${price.toLocaleString("en-IN")}</span><span class="per">${t.players > 1 ? "per person" : "full session"}</span></div>`;
+  return card;
+}
+
+function renderTypes() {
+  S.type = null;
+  $("toStep5").disabled = true;
+  $("typeTotal").textContent = "";
+  $("typeList").innerHTML = "";
+  $("joinBanner").innerHTML = "";
+
+  if (S.slot.session_type) {
+    // joining an existing group — format is fixed
+    const t = SESSION_TYPES.find(x => x.id === S.slot.session_type);
+    const left = S.slot.capacity - S.slot.spots_taken;
+    $("typeTitle").textContent = "Join this group";
+    $("typeSub").textContent = "A group is already forming in this slot — grab a spot and pay only your share.";
+    $("joinBanner").innerHTML = `<div class="join-banner"><strong>${t.label} · ${S.slot.spots_taken} of ${S.slot.capacity} spots taken.</strong> ${left} spot${left > 1 ? "s" : ""} left — your share is ₹${sharePrice(S.coach.session_price, t.id).toLocaleString("en-IN")}.</div>`;
+    const card = typeCard(t);
+    card.addEventListener("click", () => selectType(t, card));
+    $("typeList").appendChild(card);
+    selectType(t, card);
+    return;
+  }
+
+  $("typeTitle").textContent = "Session type";
+  $("typeSub").textContent = "The session price splits across the group — you pay only your share. Remaining spots stay open for others to join.";
+  SESSION_TYPES.forEach(t => {
+    const card = typeCard(t);
+    card.addEventListener("click", () => selectType(t, card));
+    $("typeList").appendChild(card);
+  });
+}
+$("toStep5").addEventListener("click", () => goTo(5));
+
+// ── Step 5: details ─────────────────────────────────────────
+function validateDetails() {
+  const name = $("inName").value.trim();
+  const phone = $("inPhone").value.replace(/\D/g, "");
+  const email = $("inEmail").value.trim();
+  let ok = true;
+  $("f-name").classList.toggle("invalid", !name); ok = ok && !!name;
+  const phoneOk = /^[6-9]\d{9}$/.test(phone);
+  $("f-phone").classList.toggle("invalid", !phoneOk); ok = ok && phoneOk;
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  $("f-email").classList.toggle("invalid", !emailOk); ok = ok && emailOk;
+  if (!ok) return null;
+  return {
+    player_name: name, phone, email,
+    skill_level: $("inSkill").value,
+    special_request: $("inRequest").value.trim(),
+  };
+}
+$("toStep6").addEventListener("click", () => {
+  const d = validateDetails();
+  if (!d) return;
+  S.details = d;
+  renderReview();
+  goTo(6);
+});
+
+// ── Step 6: review + pay ────────────────────────────────────
+function reviewRows(target, withPlayer) {
+  const rows = [
+    ["Coach", S.coach.name],
+    ["Location", S.location.name],
+    ["Date", formatDateLong(S.date)],
+    ["Time", `${formatTime12(S.slot.start_time)} – ${formatTime12(S.slot.end_time)}`],
+    ["Type", `${S.type.label} · ${S.type.players} player${S.type.players > 1 ? "s" : ""}`],
+  ];
+  if (S.type.players > 1) rows.push(["Session price", `₹${S.type.total.toLocaleString("en-IN")} split ${S.type.players} ways`]);
+  if (withPlayer) rows.push(["Booked by", S.details.player_name]);
+  target.innerHTML = rows.map(([k, v]) =>
+    `<div class="review-row"><span class="k">${k}</span><span class="v">${v}</span></div>`).join("")
+    + `<div class="review-row total"><span class="k">Your share</span><span class="v">₹${S.type.price.toLocaleString("en-IN")}</span></div>`;
+}
+function renderReview() {
+  reviewRows($("reviewCard"), true);
+  $("payBtnLabel").textContent = `Pay ₹${S.type.price.toLocaleString("en-IN")}`;
+  $("payError").classList.remove("show");
+}
+
+$("payBtn").addEventListener("click", async () => {
+  const btn = $("payBtn");
+  btn.disabled = true; btn.classList.add("loading");
+  $("payError").classList.remove("show");
+  try {
+    S.booking = await API.createBooking({
+      slot_id: S.slot.id,
+      coach_id: S.coach.id,
+      coach_name: S.coach.name,
+      location_id: S.location.id,
+      location_name: S.location.name,
+      date: S.date,
+      start_time: S.slot.start_time,
+      end_time: S.slot.end_time,
+      session_type: S.type.id,
+      players: S.type.players,
+      amount: S.type.price,          // the booker's share only
+      spots_taken: S.slot.spots_taken,
+      ...S.details,
+    });
+    renderConfirmation();
+    goTo(7);
+    document.querySelectorAll(".step-dot").forEach(d => d.classList.add("done"));
+  } catch (e) {
+    $("payError").textContent = e.message || "Something went wrong — you have not been charged.";
+    $("payError").classList.add("show");
+  } finally {
+    btn.disabled = false; btn.classList.remove("loading");
+  }
+});
+
+// ── Step 7: confirmation ────────────────────────────────────
+function renderConfirmation() {
+  $("confirmId").textContent = S.booking.booking_id;
+  reviewRows($("confirmCard"), false);
+  const left = (S.booking.capacity || S.type.players) - (S.booking.spots_taken || S.type.players);
+  $("groupNote").innerHTML = left > 0
+    ? `<div class="join-banner" style="margin-top:14px;text-align:left"><strong>${left} spot${left > 1 ? "s" : ""} still open in your group.</strong> Share the booking — anyone can join this slot and pay their own ₹${S.type.price.toLocaleString("en-IN")} share.</div>`
+    : "";
+  $("calBtn").href = buildICS();
+}
+
+function buildICS() {
+  const dt = (t) => `${S.date.replace(/-/g, "")}T${t.replace(":", "")}00`;
+  const ics = [
+    "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//DPC//Coaching//EN",
+    "BEGIN:VEVENT",
+    `UID:${S.booking.booking_id}@padelcollectiveindia.com`,
+    `DTSTART:${dt(S.slot.start_time)}`,
+    `DTEND:${dt(S.slot.end_time)}`,
+    `SUMMARY:Padel Coaching — ${S.coach.name}`,
+    `LOCATION:${S.location.name}`,
+    `DESCRIPTION:Booking ${S.booking.booking_id} · ${S.type.label} session with ${S.coach.name}`,
+    "END:VEVENT", "END:VCALENDAR",
+  ].join("\r\n");
+  return "data:text/calendar;charset=utf-8," + encodeURIComponent(ics);
+}
+
+$("shareBtn").addEventListener("click", async () => {
+  const left = (S.booking.capacity || S.type.players) - (S.booking.spots_taken || S.type.players);
+  const joinLine = left > 0 ? `\n${left} spot${left > 1 ? "s" : ""} open — join for ₹${S.type.price.toLocaleString("en-IN")}: ${location.origin}/coaching/` : "";
+  const text = `Booked a padel coaching session 🎾\n${S.coach.name} · ${S.location.name}\n${formatDateLong(S.date)}, ${formatTime12(S.slot.start_time)}\nBooking ${S.booking.booking_id}${joinLine}`;
+  if (navigator.share) { try { await navigator.share({ text }); } catch {} }
+  else { await navigator.clipboard.writeText(text); $("shareBtn").textContent = "Copied!"; }
+});
+
+$("newBookingBtn").addEventListener("click", () => {
+  S.coach = null; S.date = null; S.slot = null; S.type = null; S.booking = null;
+  document.querySelectorAll(".step-dot").forEach(d => d.classList.remove("done", "active"));
+  goTo(1);
+});
+
+// ── My sessions ─────────────────────────────────────────────
+$("mySessionsBtn").addEventListener("click", () => $("sessionsModal").classList.add("open"));
+$("sessionsModal").addEventListener("click", (e) => {
+  if (e.target === $("sessionsModal")) $("sessionsModal").classList.remove("open");
+});
+$("lookupBtn").addEventListener("click", async () => {
+  const phone = $("lookupPhone").value.replace(/\D/g, "");
+  const list = $("sessionsList");
+  if (!/^[6-9]\d{9}$/.test(phone)) { list.innerHTML = `<p class="empty-note">Enter a valid 10-digit number.</p>`; return; }
+  list.innerHTML = `<p class="empty-note">Looking up…</p>`;
+  try {
+    const bookings = await API.fetchBookings(phone);
+    if (!bookings.length) { list.innerHTML = `<p class="empty-note">No bookings found for this number.</p>`; return; }
+    list.innerHTML = bookings.map(b => `
+      <div class="session-item">
+        <div class="top"><span class="coach">${b.coach_name}</span><span class="status">${b.booking_status}</span></div>
+        <div class="detail">${b.location_name} · ${formatDateLong(b.date)} · ${formatTime12(b.start_time)}</div>
+        <div class="detail">Booking ${b.booking_id} · ₹${Number(b.amount).toLocaleString("en-IN")}</div>
+      </div>`).join("");
+  } catch (e) {
+    list.innerHTML = `<p class="empty-note">Couldn't fetch bookings — try again.</p>`;
+  }
+});
+
+// ── Init ────────────────────────────────────────────────────
+loadLocations();
+</script>
+</body>
+</html>

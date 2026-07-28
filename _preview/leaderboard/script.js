@@ -35,17 +35,6 @@ const API_URLS = {
   noida: "https://script.google.com/macros/s/AKfycbyum4imblCdj5mFLbr-zDFthSM8Am0f-1DrEVgdF7jioZueooMguFDgy5GX7V_3yRNH/exec"
 };
 
-// Fast path: read the JSON cache from Supabase (~100ms, CDN-cached)
-// instead of the 4 slow Apps Script endpoints. Paste your project
-// URL + anon key to activate; until then the site uses API_URLS as
-// before. The Apps Script endpoints remain the automatic fallback
-// if Supabase is unreachable, so the board never goes dark.
-const SUPABASE = {
-  url: "https://zruqzybdpniofxbcwuat.supabase.co",
-  anonKey: "sb_publishable_O5kl7By_s23gMXNULck-yw_cksU-9Oy"
-};
-const SUPABASE_READY = !SUPABASE.url.startsWith("YOUR_");
-
 const page = document.body.dataset.page;
 const config = PAGE_CONFIG[page];
 
@@ -251,52 +240,6 @@ function revalidateInBackground() {
 }
 
 async function fetchAllRankingsData() {
-  // { firstServe, breakPoint, matchPoint, noida } — each the raw JSON
-  // its endpoint returns, whether it came from Supabase or Apps Script.
-  const raw = await fetchRawSources();
-
-  return {
-    firstServe:           raw.firstServe.firstServe || [],
-    firstServePersonal:   raw.firstServe.pmMatchScores || [],
-    firstServeRanking:    pickFirstServeRankingRows(raw.firstServe),
-    firstServeTournament: raw.firstServe.tournamentScores || [],
-    breakPointOverall:    raw.breakPoint.breakPointOverall || [],
-    breakPointTournament: raw.breakPoint.breakPointTournament || [],
-    breakPointAmericano:  raw.breakPoint.breakPointAmericano || [],
-    matchPointPlayers:    raw.matchPoint.players || [],
-    noida:                Array.isArray(raw.noida.data) ? raw.noida.data : []
-  };
-}
-
-// Fast path (Supabase) with automatic fallback to the Apps Script
-// endpoints, so a Supabase outage never takes the board down.
-async function fetchRawSources() {
-  if (SUPABASE_READY) {
-    try {
-      return await fetchFromSupabase();
-    } catch (error) {
-      console.warn("Supabase read failed, falling back to Apps Script:", error);
-    }
-  }
-  return fetchFromAppsScript();
-}
-
-async function fetchFromSupabase() {
-  const res = await fetch(
-    `${SUPABASE.url}/rest/v1/leaderboard_cache?select=source,payload`,
-    { headers: { apikey: SUPABASE.anonKey, Authorization: `Bearer ${SUPABASE.anonKey}` } }
-  );
-  if (!res.ok) throw new Error(`Supabase HTTP ${res.status}`);
-  const rows = await res.json();
-  const bySource = {};
-  for (const row of rows) bySource[row.source] = row.payload;
-  for (const key of ["firstServe", "breakPoint", "matchPoint", "noida"]) {
-    if (!bySource[key]) throw new Error(`Missing "${key}" in Supabase cache`);
-  }
-  return bySource;
-}
-
-async function fetchFromAppsScript() {
   const [firstServeRes, breakPointRes, matchPointRes, noidaRes] = await Promise.all([
     fetch(API_URLS.firstServe),
     fetch(API_URLS.breakPoint),
@@ -309,14 +252,24 @@ async function fetchFromAppsScript() {
   if (!matchPointRes.ok) throw new Error("Failed to fetch Match Point data");
   if (!noidaRes.ok) throw new Error("Failed to fetch Noida data");
 
-  const [firstServe, breakPoint, matchPoint, noida] = await Promise.all([
+  const [firstServeData, breakPointData, matchPointData, noidaData] = await Promise.all([
     firstServeRes.json(),
     breakPointRes.json(),
     matchPointRes.json(),
     noidaRes.json()
   ]);
 
-  return { firstServe, breakPoint, matchPoint, noida };
+  return {
+    firstServe:           firstServeData.firstServe || [],
+    firstServePersonal:   firstServeData.pmMatchScores || [],
+    firstServeRanking:    pickFirstServeRankingRows(firstServeData),
+    firstServeTournament: firstServeData.tournamentScores || [],   // ← NEW
+    breakPointOverall:    breakPointData.breakPointOverall || [],
+    breakPointTournament: breakPointData.breakPointTournament || [],
+    breakPointAmericano:  breakPointData.breakPointAmericano || [],
+    matchPointPlayers:    matchPointData.players || [],
+    noida:                Array.isArray(noidaData.data) ? noidaData.data : []
+  };
 }
 
 // ─── CACHE ───────────────────────────────────────────────────────────────────
@@ -400,11 +353,6 @@ function normalizeTournamentRankings(rows) {
   return addClusterRanks(sorted);
 }
 
-function isVerified(row) {
-  const v = row.Verified ?? row.verified ?? row.VERIFIED;
-  return String(v).trim().toUpperCase() === "TRUE";
-}
-
 function normalizeOverallRankings(rows) {
   return rows
     .map((row) => ({
@@ -412,9 +360,7 @@ function normalizeOverallRankings(rows) {
       name:   String(row.Name || "").trim(),
       score:  toNumber(row.Score),
       rating: toDecimal(row.Rating),
-      rank:   toNumber(row.Ranking || row.ranking || row.Rank),
-      matches: toNumber(row["Matches played"] ?? row.matches ?? row.MP),
-      verified: isVerified(row)
+      rank:   toNumber(row.Ranking || row.ranking || row.Rank)
     }))
     .filter((player) => player.name && !player.name.startsWith("#"))
     .sort((a, b) => a.rank - b.rank);
@@ -427,9 +373,7 @@ function normalizeMatchPointRankings(rows) {
       name:   String(row.name || "").trim(),
       score:  toNumber(row.score),
       rating: toDecimal(row.rating),
-      rank:   toNumber(row.Ranking || row.ranking || row.Rank),
-      matches: toNumber(row.matches ?? row["Matches played"] ?? row.MP ?? row.mp),
-      verified: isVerified(row)
+      rank:   toNumber(row.Ranking || row.ranking || row.Rank)
     }))
     .filter((player) => player.name && !player.name.startsWith("#"))
     .sort((a, b) => a.rank - b.rank);
@@ -442,9 +386,7 @@ function normalizeFlexibleOverallRankings(rows) {
       name:   String(row.Name || row["Player Name"] || row.playerName || "").trim(),
       score:  toNumber(row.Score || row.score),
       rating: toDecimal(row.Rating ?? row.rating ?? 0),
-      rank:   toNumber(row.Ranking || row.ranking || row.Rank),
-      matches: toNumber(row["Matches played"] ?? row.matches ?? row.MP ?? row.mp),
-      verified: isVerified(row)
+      rank:   toNumber(row.Ranking || row.ranking || row.Rank)
     }))
     .filter((player) => player.name && !player.name.startsWith("#"))
     .sort((a, b) => a.rank - b.rank);
@@ -482,139 +424,18 @@ function compareByScore(a, b) {
 
 // ─── RENDERERS ───────────────────────────────────────────────────────────────
 
-function getViewerName() {
-  try {
-    if (sessionStorage.getItem("dpcDemo") === "1") return "Nik S";
-    const raw = localStorage.getItem("dpcPlayerSession");
-    if (raw) { const p = JSON.parse(raw); return p && p.name ? p.name : null; }
-  } catch (e) {}
-  return null;
-}
-
-function initials(name) {
-  const parts = String(name || "").trim().split(/\s+/).filter(Boolean);
-  if (!parts.length) return "?";
-  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-}
-
-function isViewer(player, viewer) {
-  return !!(viewer && player.name && player.name.toLowerCase() === viewer.toLowerCase());
-}
-
-const AV_COLORS = ["#9d7bc9","#5b6472","#2f8f83","#c1614f","#3f9d7f","#7c6fc9","#b1793f","#4f7cc1","#a85a86","#3d8f8f"];
-function avColor(name) {
-  let h = 0; const s = String(name || "");
-  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
-  return AV_COLORS[h % AV_COLORS.length];
-}
-function verifiedBadge(p) {
-  return p && p.verified ? '<span class="vbadge" title="Verified ranking">✓</span>' : "";
-}
-function ensureVerifiedLegend(target, anyVerified) {
-  const sub = target.closest(".subsection"); if (!sub) return;
-  let leg = sub.querySelector(".verified-legend");
-  if (anyVerified && !leg) {
-    leg = document.createElement("div");
-    leg.className = "verified-legend";
-    leg.innerHTML = '<span class="vbadge">✓</span> Verified ranking';
-    const podium = sub.querySelector(".podium");
-    if (podium) podium.after(leg); else sub.prepend(leg);
-  } else if (!anyVerified && leg) { leg.remove(); }
-}
-
-function podiumMarkup(top3, valueOf, unit) {
-  const order = [top3[1], top3[0], top3[2]];
-  const slot  = ["second", "first", "third"];
-  return order.map((p, i) => {
-    if (!p) return `<div class="podium-item ${slot[i]}"></div>`;
-    const sub = [
-      (p.matches != null ? `<b>${p.matches}</b> matches` : ""),
-      (p.rating != null ? `<b>${p.rating.toFixed(1)}</b> rating` : "")
-    ].filter(Boolean).join(" · ");
-    return `<div class="podium-item ${slot[i]}">
-      <div class="podium-avwrap">
-        <div class="podium-avatar" style="background:${avColor(p.name)}">${escapeHtml(initials(p.name))}</div>
-        <div class="podium-badge">${p.rank}</div>
-      </div>
-      <div class="podium-name"><span>${escapeHtml(p.name)}</span>${verifiedBadge(p)}</div>
-      <div class="podium-value">${valueOf(p)}</div>
-      <div class="podium-label">Score</div>
-      ${sub ? `<div class="podium-sub">${sub}</div>` : ""}
-    </div>`;
-  }).join("");
-}
-
-function yourRankMarkup(me, valueOf) {
-  return `<div class="your-rank-num">${me.rank}</div>
-    <div class="your-rank-mid">
-      <div class="your-rank-kicker">Your rank</div>
-      <div class="your-rank-name">${escapeHtml(me.name)}</div>
-    </div>
-    <div class="your-rank-val">${valueOf(me)}</div>`;
-}
-
-// Inject/update the podium + "your rank" card for a panel, and return the
-// list of players the table below should show (ranks 4+ when the podium is
-// visible; the full list while searching).
-function enhancePanel(target, rankings, valueOf, unit) {
-  const subsection = target.closest(".subsection");
-  if (!subsection) return rankings;
-  const query  = tableSearchState.get(target.id) || "";
-  const search = subsection.querySelector(".leaderboard-search");
-
-  let podium = subsection.querySelector(".podium");
-  if (!podium) {
-    podium = document.createElement("div");
-    podium.className = "podium";
-    subsection.insertBefore(podium, search || subsection.querySelector(".table-wrap"));
-  }
-  let yr = subsection.querySelector(".your-rank");
-  if (!yr) {
-    yr = document.createElement("div");
-    yr.className = "your-rank";
-    subsection.appendChild(yr);
-  }
-
-  if (query || rankings.length < 3) {
-    podium.hidden = true;
-    yr.hidden = true;
-    return rankings;
-  }
-
-  podium.hidden = false;
-  podium.innerHTML = podiumMarkup(rankings.slice(0, 3), valueOf, unit);
-
-  const viewer = getViewerName();
-  const me = viewer ? rankings.find((p) => isViewer(p, viewer)) : null;
-  if (me) { yr.hidden = false; yr.innerHTML = yourRankMarkup(me, valueOf); }
-  else { yr.hidden = true; }
-
-  return rankings.slice(3);
-}
-
-function playerCell(player, viewer, sub) {
-  const subhtml = sub ? `<div class="player-sub">${escapeHtml(sub)}</div>` : "";
-  return `<div class="player-cell">
-    <span class="avatar" style="background:${avColor(player.name)}">${escapeHtml(initials(player.name))}</span>
-    <span class="player-info"><span class="nmrow"><span class="player-name">${escapeHtml(player.name)}</span>${verifiedBadge(player)}</span>${subhtml}</span>
-  </div>`;
-}
-
 function renderBasicTable(target, rankings, colspan, emptyMessage = "No ranking entries yet.") {
   if (!target) return;
   ensureSearchUi(target);
   if (!rankings.length) { renderMessageRow(target, emptyMessage, colspan); return; }
-  const viewer = getViewerName();
-  const listRankings = enhancePanel(target, rankings, (p) => p.score, "pts");
-  const visibleRankings = getVisibleRankings(target, listRankings);
+  const visibleRankings = getVisibleRankings(target, rankings);
   if (!visibleRankings.length) { renderMessageRow(target, "No players found for that search.", colspan); return; }
-  target.innerHTML = visibleRankings.map((player) => {
+  target.innerHTML = visibleRankings.map((player, index) => {
     const badge = renderBadge(player.rank);
     return `
-      <tr class="${isViewer(player, viewer) ? "highlight" : ""}">
+      <tr class="${index === 0 ? "highlight" : ""}">
         <td>${badge ? `<span class="${badge.className}">${badge.label}</span>` : `<span class="rank-text">${player.rank}</span>`}</td>
-        <td>${playerCell(player, viewer)}</td>
+        <td><div class="player-name">${escapeHtml(player.name)}</div></td>
         <td class="stat-cell">${player.matches}</td>
         <td class="stat-cell points-cell">${player.score}</td>
       </tr>`;
@@ -625,16 +446,14 @@ function renderTournamentTable(target, rankings, colspan, emptyMessage = "No tou
   if (!target) return;
   ensureSearchUi(target);
   if (!rankings.length) { renderMessageRow(target, emptyMessage, colspan); return; }
-  const viewer = getViewerName();
-  const listRankings = enhancePanel(target, rankings, (p) => p.score, "pts");
-  const visibleRankings = getVisibleRankings(target, listRankings);
+  const visibleRankings = getVisibleRankings(target, rankings);
   if (!visibleRankings.length) { renderMessageRow(target, "No players found for that search.", colspan); return; }
-  target.innerHTML = visibleRankings.map((player) => {
+  target.innerHTML = visibleRankings.map((player, index) => {
     const badge = renderBadge(player.rank);
     return `
-      <tr class="${isViewer(player, viewer) ? "highlight" : ""}">
+      <tr class="${index === 0 ? "highlight" : ""}">
         <td>${badge ? `<span class="${badge.className}">${badge.label}</span>` : `<span class="rank-text">${player.rank}</span>`}</td>
-        <td>${playerCell(player, viewer)}</td>
+        <td><div class="player-name">${escapeHtml(player.name)}</div></td>
         <td class="stat-cell">${player.matches}</td>
         <td class="stat-cell">${player.wins}</td>
         <td class="stat-cell">${player.losses}</td>
@@ -647,20 +466,16 @@ function renderOverallTable(target, rankings, colspan) {
   if (!target) return;
   ensureSearchUi(target);
   if (!rankings.length) { renderMessageRow(target, "No overall entries yet.", colspan); return; }
-  const viewer = getViewerName();
-  const listRankings = enhancePanel(target, rankings, (p) => p.score, "pts");
-  ensureVerifiedLegend(target, rankings.some((p) => p.verified));
-  const visibleRankings = getVisibleRankings(target, listRankings);
+  const visibleRankings = getVisibleRankings(target, rankings);
   if (!visibleRankings.length) { renderMessageRow(target, "No players found for that search.", colspan); return; }
-  target.innerHTML = visibleRankings.map((player) => {
+  target.innerHTML = visibleRankings.map((player, index) => {
     const badge = renderBadge(player.rank);
-    const sub = player.matches != null ? `${player.matches} matches` : "";
     return `
-      <tr class="${isViewer(player, viewer) ? "highlight" : ""}">
+      <tr class="${index === 0 ? "highlight" : ""}">
         <td>${badge ? `<span class="${badge.className}">${badge.label}</span>` : `<span class="rank-text">${player.rank}</span>`}</td>
-        <td>${playerCell(player, viewer, sub)}</td>
-        <td class="stat-cell">${player.rating.toFixed(1)}<small>rating</small></td>
-        <td class="stat-cell points-cell">${player.score}</td>
+        <td><div class="player-name">${escapeHtml(player.name)}</div></td>
+        <td class="stat-cell">${player.score}</td>
+        <td class="stat-cell points-cell">${player.rating.toFixed(1)}</td>
       </tr>`;
   }).join("");
 }
