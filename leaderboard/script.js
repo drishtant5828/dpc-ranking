@@ -79,7 +79,7 @@ const elements = {
   americanoPanel: document.getElementById("americanoPanel")
 };
 
-const DEFAULT_VISIBLE_RANKINGS = 10;
+const DEFAULT_VISIBLE_RANKINGS = 50;
 const tableSearchState = new Map();
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -93,6 +93,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     pendingFetch = null;
   });
   await config?.loader(false);
+  await applyDeepLinkSearch();
+  injectInfoButton();
   revalidateInBackground();
 });
 
@@ -215,16 +217,63 @@ async function loadNoidaPage(isManualRefresh) {
 // ─── DATA FETCHING ───────────────────────────────────────────────────────────
 
 let pendingFetch = null;
+let allData = null; // last-loaded data for every board — powers cross-board search
 
 async function getAllRankingsData(useFresh = false) {
   if (useFresh) {
     // Refresh click: reuse the background fetch started on page open —
     // already resolved (instant) or still in flight (await it).
-    return startBackgroundFetch();
+    return (allData = await startBackgroundFetch());
   }
   const cached = readCache();
-  if (cached) return cached.data;
-  return startBackgroundFetch();
+  if (cached) return (allData = cached.data);
+  return (allData = await startBackgroundFetch());
+}
+
+// Each board's overall ranking, reusing the existing normalizers.
+const BOARDS = [
+  { page: "index.html",      rows: (d) => normalizeFlexibleOverallRankings(d.firstServeRanking || []) },
+  { page: "breakpoint.html", rows: (d) => normalizeOverallRankings(d.breakPointOverall || []) },
+  { page: "matchpoint.html", rows: (d) => normalizeMatchPointRankings(d.matchPointPlayers || []) },
+  { page: "noida.html",      rows: (d) => normalizeNoidaRankings(d.noida || []) }
+];
+
+// If the query matches no one on this board but does on another, open that board.
+function crossBoardJump(query) {
+  if (query.length < 3 || !allData || !config) return;
+  const here = config.selectorValue;
+  const hasMatch = (b) => b.rows(allData).some((p) => p.name.toLowerCase().includes(query));
+  if (BOARDS.find((b) => b.page === here && hasMatch(b))) return;
+  const other = BOARDS.find((b) => b.page !== here && hasMatch(b));
+  if (other) window.location.href = `${other.page}?q=${encodeURIComponent(query)}`;
+}
+
+// Landing here from a cross-board jump (?q=name): pre-fill the search and filter.
+async function applyDeepLinkSearch() {
+  const q = new URLSearchParams(location.search).get("q");
+  if (!q) return;
+  const input = document.querySelector(".subsection:not(.panel-hidden) .leaderboard-search-input");
+  if (!input) return;
+  input.value = q;
+  tableSearchState.set(input.dataset.searchTarget, q.trim().toLowerCase());
+  await config?.loader(false);
+}
+
+// One "i" button by the standings header explaining rank / rating / score.
+function injectInfoButton() {
+  const head = document.querySelector(".standings-head > div");
+  if (!head || head.querySelector(".info")) return;
+  const el = document.createElement("details");
+  el.className = "info";
+  el.innerHTML = `
+    <summary class="info-btn" title="What do these mean?">i</summary>
+    <div class="info-pop">
+      <p><b>Rank</b> — your spot on the board, set by rating (score breaks ties).</p>
+      <p><b>Rating</b> — your level on the 0–7 skill scale.</p>
+      <p><b>Score</b> — total match points, which feed your rating.</p>
+      <a href="explainer.html">Full guide →</a>
+    </div>`;
+  head.appendChild(el);
 }
 
 function startBackgroundFetch() {
@@ -701,14 +750,16 @@ function ensureSearchUi(target) {
         aria-label="Search player name"
         data-search-target="${target.id}"
       />
-      <p class="leaderboard-search-note">Showing top 10 by default. Search any player by name.</p>
+      <p class="leaderboard-search-note">Showing top 50 by default. Search any player by name.</p>
     </div>
   `);
   const input = tableWrap.previousElementSibling?.querySelector(".leaderboard-search-input");
   if (!input) return;
   input.addEventListener("input", (event) => {
-    tableSearchState.set(target.id, event.target.value.trim().toLowerCase());
+    const q = event.target.value.trim().toLowerCase();
+    tableSearchState.set(target.id, q);
     config?.loader(false);
+    crossBoardJump(q);
   });
 }
 
