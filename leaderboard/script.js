@@ -250,7 +250,7 @@ function renderCrossBoard(query) {
     for (const b of BOARDS) {
       if (b.page === here) continue;
       for (const p of b.rows(allData)) {
-        if (p.name.toLowerCase().includes(query)) results.push({ name: p.name, page: b.page, label: b.label });
+        if (p.name.toLowerCase().includes(query)) results.push({ p, page: b.page, label: b.label });
       }
     }
   }
@@ -259,7 +259,7 @@ function renderCrossBoard(query) {
   box.innerHTML = `<p class="cross-board-title">On other boards</p>` +
     results.slice(0, 10).map((r) =>
       `<a class="cross-row" href="${r.page}?q=${encodeURIComponent(query)}">
-        <span class="cross-name">${escapeHtml(r.name)}</span>
+        ${playerCell(r.p, null, r.p.matches != null ? `${r.p.matches} matches` : "")}
         <span class="cross-board-tag">${r.label} →</span>
       </a>`).join("");
 }
@@ -290,6 +290,7 @@ function injectInfoButton() {
       <a href="explainer.html">Full guide →</a>
     </div>`;
   head.appendChild(el);
+  document.addEventListener("click", (e) => { if (!el.contains(e.target)) el.open = false; });
 }
 
 function startBackgroundFetch() {
