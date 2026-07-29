@@ -523,41 +523,38 @@ function ensureVerifiedLegend(target, anyVerified) {
   } else if (!anyVerified && leg) { leg.remove(); }
 }
 
-function podiumMarkup(top3, valueOf, unit) {
+function podiumMarkup(top3, opts) {
   const order = [top3[1], top3[0], top3[2]];
   const slot  = ["second", "first", "third"];
   return order.map((p, i) => {
     if (!p) return `<div class="podium-item ${slot[i]}"></div>`;
-    const sub = [
-      (p.matches != null ? `<b>${p.matches}</b> matches` : ""),
-      (p.rating != null ? `<b>${p.rating.toFixed(1)}</b> rating` : "")
-    ].filter(Boolean).join(" · ");
+    const sub = opts.sub ? opts.sub(p) : "";
     return `<div class="podium-item ${slot[i]}">
       <div class="podium-avwrap">
         <div class="podium-avatar" style="background:${avColor(p.name)}">${escapeHtml(initials(p.name))}</div>
         <div class="podium-badge">${p.rank}</div>
       </div>
       <div class="podium-name"><span>${escapeHtml(p.name)}</span>${verifiedBadge(p)}</div>
-      <div class="podium-value">${valueOf(p)}</div>
-      <div class="podium-label">Score</div>
+      <div class="podium-value">${opts.value(p)}</div>
+      <div class="podium-label">${opts.label}</div>
       ${sub ? `<div class="podium-sub">${sub}</div>` : ""}
     </div>`;
   }).join("");
 }
 
-function yourRankMarkup(me, valueOf) {
+function yourRankMarkup(me, opts) {
   return `<div class="your-rank-num">${me.rank}</div>
     <div class="your-rank-mid">
       <div class="your-rank-kicker">Your rank</div>
       <div class="your-rank-name">${escapeHtml(me.name)}</div>
     </div>
-    <div class="your-rank-val">${valueOf(me)}</div>`;
+    <div class="your-rank-val">${opts.value(me)}</div>`;
 }
 
 // Inject/update the podium + "your rank" card for a panel, and return the
 // list of players the table below should show (ranks 4+ when the podium is
 // visible; the full list while searching).
-function enhancePanel(target, rankings, valueOf, unit) {
+function enhancePanel(target, rankings, opts) {
   const subsection = target.closest(".subsection");
   if (!subsection) return rankings;
   const query  = tableSearchState.get(target.id) || "";
@@ -583,11 +580,11 @@ function enhancePanel(target, rankings, valueOf, unit) {
   }
 
   podium.hidden = false;
-  podium.innerHTML = podiumMarkup(rankings.slice(0, 3), valueOf, unit);
+  podium.innerHTML = podiumMarkup(rankings.slice(0, 3), opts);
 
   const viewer = getViewerName();
   const me = viewer ? rankings.find((p) => isViewer(p, viewer)) : null;
-  if (me) { yr.hidden = false; yr.innerHTML = yourRankMarkup(me, valueOf); }
+  if (me) { yr.hidden = false; yr.innerHTML = yourRankMarkup(me, opts); }
   else { yr.hidden = true; }
 
   return rankings.slice(3);
@@ -606,7 +603,11 @@ function renderBasicTable(target, rankings, colspan, emptyMessage = "No ranking 
   ensureSearchUi(target);
   if (!rankings.length) { renderMessageRow(target, emptyMessage, colspan); return; }
   const viewer = getViewerName();
-  const listRankings = enhancePanel(target, rankings, (p) => p.score, "pts");
+  const listRankings = enhancePanel(target, rankings, {
+    value: (p) => p.score,
+    label: "Points",
+    sub: (p) => (p.matches != null ? `${p.matches} matches` : "")
+  });
   const visibleRankings = getVisibleRankings(target, listRankings);
   if (!visibleRankings.length) { renderMessageRow(target, "No players found for that search.", colspan); return; }
   target.innerHTML = visibleRankings.map((player) => {
@@ -626,7 +627,11 @@ function renderTournamentTable(target, rankings, colspan, emptyMessage = "No tou
   ensureSearchUi(target);
   if (!rankings.length) { renderMessageRow(target, emptyMessage, colspan); return; }
   const viewer = getViewerName();
-  const listRankings = enhancePanel(target, rankings, (p) => p.score, "pts");
+  const listRankings = enhancePanel(target, rankings, {
+    value: (p) => p.score,
+    label: "Points",
+    sub: (p) => `${p.wins || 0}W · ${p.losses || 0}L`
+  });
   const visibleRankings = getVisibleRankings(target, listRankings);
   if (!visibleRankings.length) { renderMessageRow(target, "No players found for that search.", colspan); return; }
   target.innerHTML = visibleRankings.map((player) => {
@@ -648,7 +653,11 @@ function renderOverallTable(target, rankings, colspan) {
   ensureSearchUi(target);
   if (!rankings.length) { renderMessageRow(target, "No overall entries yet.", colspan); return; }
   const viewer = getViewerName();
-  const listRankings = enhancePanel(target, rankings, (p) => p.score, "pts");
+  const listRankings = enhancePanel(target, rankings, {
+    value: (p) => p.rating.toFixed(1),
+    label: "Rating",
+    sub: (p) => [p.matches != null ? `${p.matches} matches` : "", `${p.score} score`].filter(Boolean).join(" · ")
+  });
   ensureVerifiedLegend(target, rankings.some((p) => p.verified));
   const visibleRankings = getVisibleRankings(target, listRankings);
   if (!visibleRankings.length) { renderMessageRow(target, "No players found for that search.", colspan); return; }
@@ -659,8 +668,8 @@ function renderOverallTable(target, rankings, colspan) {
       <tr class="${isViewer(player, viewer) ? "highlight" : ""}">
         <td>${badge ? `<span class="${badge.className}">${badge.label}</span>` : `<span class="rank-text">${player.rank}</span>`}</td>
         <td>${playerCell(player, viewer, sub)}</td>
-        <td class="stat-cell">${player.rating.toFixed(1)}<small>rating</small></td>
-        <td class="stat-cell points-cell">${player.score}</td>
+        <td class="stat-cell">${player.score}<small>score</small></td>
+        <td class="stat-cell points-cell">${player.rating.toFixed(1)}</td>
       </tr>`;
   }).join("");
 }
