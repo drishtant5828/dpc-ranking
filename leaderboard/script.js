@@ -232,20 +232,36 @@ async function getAllRankingsData(useFresh = false) {
 
 // Each board's overall ranking, reusing the existing normalizers.
 const BOARDS = [
-  { page: "index.html",      rows: (d) => normalizeFlexibleOverallRankings(d.firstServeRanking || []) },
-  { page: "breakpoint.html", rows: (d) => normalizeOverallRankings(d.breakPointOverall || []) },
-  { page: "matchpoint.html", rows: (d) => normalizeMatchPointRankings(d.matchPointPlayers || []) },
-  { page: "noida.html",      rows: (d) => normalizeNoidaRankings(d.noida || []) }
+  { page: "index.html",      label: "First Serve", rows: (d) => normalizeFlexibleOverallRankings(d.firstServeRanking || []) },
+  { page: "breakpoint.html", label: "Break Point", rows: (d) => normalizeOverallRankings(d.breakPointOverall || []) },
+  { page: "matchpoint.html", label: "Match Point", rows: (d) => normalizeMatchPointRankings(d.matchPointPlayers || []) },
+  { page: "noida.html",      label: "Noida",       rows: (d) => normalizeNoidaRankings(d.noida || []) }
 ];
 
-// If the query matches no one on this board but does on another, open that board.
-function crossBoardJump(query) {
-  if (query.length < 3 || !allData || !config) return;
+// Show matches from OTHER boards as tappable options below the list;
+// clicking opens that board with the player pre-searched.
+function renderCrossBoard(query) {
+  const sub = document.querySelector(".subsection:not(.panel-hidden)");
+  if (!sub || !config) return;
+  let box = sub.querySelector(".cross-board");
   const here = config.selectorValue;
-  const hasMatch = (b) => b.rows(allData).some((p) => p.name.toLowerCase().includes(query));
-  if (BOARDS.find((b) => b.page === here && hasMatch(b))) return;
-  const other = BOARDS.find((b) => b.page !== here && hasMatch(b));
-  if (other) window.location.href = `${other.page}?q=${encodeURIComponent(query)}`;
+  const results = [];
+  if (query.length >= 2 && allData) {
+    for (const b of BOARDS) {
+      if (b.page === here) continue;
+      for (const p of b.rows(allData)) {
+        if (p.name.toLowerCase().includes(query)) results.push({ name: p.name, page: b.page, label: b.label });
+      }
+    }
+  }
+  if (!results.length) { box?.remove(); return; }
+  if (!box) { box = document.createElement("div"); box.className = "cross-board"; sub.appendChild(box); }
+  box.innerHTML = `<p class="cross-board-title">On other boards</p>` +
+    results.slice(0, 10).map((r) =>
+      `<a class="cross-row" href="${r.page}?q=${encodeURIComponent(query)}">
+        <span class="cross-name">${escapeHtml(r.name)}</span>
+        <span class="cross-board-tag">${r.label} →</span>
+      </a>`).join("");
 }
 
 // Landing here from a cross-board jump (?q=name): pre-fill the search and filter.
@@ -759,7 +775,7 @@ function ensureSearchUi(target) {
     const q = event.target.value.trim().toLowerCase();
     tableSearchState.set(target.id, q);
     config?.loader(false);
-    crossBoardJump(q);
+    renderCrossBoard(q);
   });
 }
 

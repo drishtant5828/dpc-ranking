@@ -124,6 +124,15 @@ h1, h2, h3, p, table { margin: 0; }
 .info-pop p b { color: var(--ink); font-weight: 600; }
 .info-pop a { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.04em; color: var(--accent); text-decoration: none; }
 
+/* Cross-board search results (tap to open that board) */
+.cross-board { margin-top: 16px; border-top: 1px solid var(--line); padding-top: 12px; }
+.cross-board-title { font-size: 0.6rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+.cross-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 13px 8px; border-radius: 10px; text-decoration: none; color: var(--ink); border-bottom: 1px solid var(--hair); }
+.cross-row:last-child { border-bottom: none; }
+.cross-row:hover { background: rgba(255, 255, 255, 0.03); }
+.cross-name { font-size: 0.95rem; font-weight: 500; }
+.cross-board-tag { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.04em; color: var(--muted2); border: 1px solid var(--line); border-radius: 99px; padding: 4px 11px; white-space: nowrap; }
+
 /* ── Tabs ── */
 .tab-switcher {
   display: flex; align-items: center; gap: 22px; margin-top: 14px;
