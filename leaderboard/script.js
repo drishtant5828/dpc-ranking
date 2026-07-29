@@ -731,7 +731,7 @@ function renderOverallTable(target, rankings, colspan) {
       <tr class="${isViewer(player, viewer) ? "highlight" : ""}">
         <td>${badge ? `<span class="${badge.className}">${badge.label}</span>` : `<span class="rank-text">${player.rank}</span>`}</td>
         <td>${playerCell(player, viewer, sub)}</td>
-        <td class="stat-cell">${player.score}<small>score</small></td>
+        <td class="stat-cell">${player.score}</td>
         <td class="stat-cell points-cell">${player.rating.toFixed(1)}</td>
       </tr>`;
   }).join("");
