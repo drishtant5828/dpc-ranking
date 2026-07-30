@@ -59,8 +59,8 @@ h1, h2, h3, p, table { margin: 0; }
 /* ── Top bar ── */
 .topbar {
   display: flex; justify-content: flex-end; align-items: center; gap: 16px;
-  padding: 9px max(20px, calc((100% - 760px) / 2));
-  background: #fff; border-bottom: 1px solid var(--line);
+  padding: 9px max(20px, calc((100% - 760px) / 2)) 0;
+  background: #fff;
   position: sticky; top: 0; z-index: 50;
 }
 .brand-lockup { display: none; }
@@ -89,7 +89,7 @@ h1, h2, h3, p, table { margin: 0; }
 .topbar-meta { display: none; }
 
 /* ── Hero ── */
-.hero-banner { display: flex; align-items: flex-start; gap: 8px; padding: 4px 20px 0; background: transparent; }
+.hero-banner { display: flex; align-items: flex-start; gap: 8px; padding: 0 20px 14px; background: #fff; border-bottom: 1px solid var(--line); }
 .slash { font-family: var(--serif); font-size: clamp(2.6rem, 11vw, 3.3rem); line-height: 0.92; color: var(--accent); font-weight: 400; margin-top: 6px; }
 .hero-copy { text-align: left; }
 .hero-copy h1 {
