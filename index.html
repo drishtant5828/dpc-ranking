@@ -80,7 +80,8 @@
     display: none;
   }
   .nav-login,
-  .nav-dashboard {
+  .nav-dashboard,
+  .nav-howto {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -103,9 +104,22 @@
     transition: background .22s ease, transform .22s ease;
   }
   .nav-login:hover,
-  .nav-dashboard:hover {
+  .nav-dashboard:hover,
+  .nav-howto:hover {
     background: rgba(255,255,255,.08);
     transform: translateY(-1px);
+  }
+  .nav-howto {
+    min-width: 0;
+    letter-spacing: 1px;
+    background: rgba(255,255,255,.12);
+  }
+  @media (max-width: 768px) {
+    .nav-logo svg { width: 118px; }
+    .nav-login, .nav-dashboard, .nav-howto {
+      min-width: 0; padding: 0 12px; height: 36px;
+      font-size: 9px; letter-spacing: .6px;
+    }
   }
 
   .hamburger {
@@ -560,6 +574,7 @@ video::-webkit-media-controls-fullscreen-button {
     <svg xmlns="http://www.w3.org/2000/svg"><use href="#dpc-logo"/></svg>
   </a>
   <div class="nav-actions" id="navActions">
+  <a class="nav-howto" href="/leaderboard/explainer.html">How ranking works</a>
   <a class="nav-login" href="/login/">Login</a>
   <a class="nav-dashboard" href="/Dashboard/">Dashboard</a>
     <button class="hamburger" id="hamburger" aria-label="Menu">
@@ -579,6 +594,7 @@ video::-webkit-media-controls-fullscreen-button {
 <a class="drawer-link" href="/coaching/">Coaching</a>
 <a class="drawer-link" href="/calender/">Calendar</a>
 <a class="drawer-link" href="/leaderboard/">Leaderboard</a>
+<a class="drawer-link" href="/leaderboard/explainer.html" onclick="closeDrawer()">How ranking works</a>
 <a class="drawer-link cta-link" href="/Application/" onclick="closeDrawer()">Apply to Join →</a>
 <a class="drawer-link utility-link login-link" href="/login/" onclick="closeDrawer()">Login</a>
 <a class="drawer-link utility-link dashboard-link" href="/Dashboard/" onclick="closeDrawer()">Dashboard</a>
