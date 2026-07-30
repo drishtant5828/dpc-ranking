@@ -69,10 +69,19 @@ nav{
 .page{max-width:none;margin-left:var(--sidebar-w);padding:112px 56px 60px;}
 .dashboard-main{min-width:0}
 
-.hero{padding:0;margin-bottom:0;display:flex;align-items:flex-start;justify-content:space-between;gap:24px;}
-.hero-eyebrow{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
-.hero-heading{font-family:var(--heading);font-size:32px;font-weight:400;line-height:1;letter-spacing:-.5px;margin-bottom:8px}
-.hero-subcopy{font-family:var(--heading);font-style:italic;font-size:17px;color:#8a857f}
+.hero{padding:0;margin-bottom:0;display:flex;align-items:center;justify-content:space-between;gap:16px;}
+.hero-left{display:flex;align-items:center;gap:13px;min-width:0}
+.hero-avatar{width:46px;height:46px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--body);font-weight:600;font-size:15px;background:#7c6fc9}
+.hero-name-row{display:flex;align-items:center;gap:7px}
+.hero-heading{font-family:var(--heading);font-size:24px;font-weight:400;line-height:1;letter-spacing:-.3px;margin:0}
+.hero-badge{width:17px;height:17px;border-radius:50%;background:#2ecb82;color:#fff;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.hero-badge[hidden]{display:none}
+.hero-subcopy{font-family:var(--body);font-style:normal;font-size:13px;color:var(--muted2);margin-top:3px}
+.hero-actions{display:flex;gap:8px;flex-shrink:0}
+.icon-btn{width:40px;height:40px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:#fff;border:1px solid var(--border);color:var(--muted2);cursor:pointer;transition:color .2s,border-color .2s;}
+.icon-btn svg{width:18px;height:18px}
+.icon-btn:hover{color:var(--accent);border-color:var(--accent)}
+.icon-btn:disabled{opacity:.45;cursor:not-allowed}
 
 /* ── Refresh button ── */
 .refresh-btn {
@@ -97,7 +106,7 @@ nav{
 .refresh-btn:hover { color: var(--text); border-color: var(--text); }
 .refresh-btn:disabled { opacity: .45; cursor: not-allowed; }
 .refresh-btn svg { width: 13px; height: 13px; stroke: currentColor; transition: transform .6s; flex-shrink: 0; }
-.refresh-btn.spinning svg { animation: spin .7s linear infinite; }
+.refresh-btn.spinning svg, .icon-btn.spinning svg { animation: spin .7s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 .cache-label {
@@ -150,7 +159,11 @@ nav{
 
 .match-scroll{margin-top:12px;background:#fff;border-radius:16px;padding:2px 14px}
 .match-list{display:flex;flex-direction:column;gap:0}
-.match-card{background:transparent;border:none;border-bottom:1px solid var(--border);border-radius:0;padding:18px 2px;display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:start;transition:background .15s;cursor:pointer;}
+.match-card{background:transparent;border:none;border-bottom:1px solid var(--border);border-radius:0;padding:16px 2px;display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;transition:background .15s;cursor:pointer;}
+.match-sub{font-size:12px;color:var(--muted);margin-top:4px;display:flex;align-items:center;gap:7px}
+.jump{font-size:11px;font-weight:600}
+.jump.up{color:var(--green)}
+.jump.down{color:var(--red)}
 .match-card:last-child{border-bottom:none}
 .match-card:hover{background:rgba(23,21,19,.02)}
 .match-lead{font-family:var(--heading);font-size:30px;font-weight:400;line-height:1;color:var(--muted);width:34px;text-align:center;flex-shrink:0;padding-top:2px}
@@ -164,7 +177,8 @@ nav{
 .match-detail{font-size:12px;color:var(--muted2);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .match-card.expanded .match-detail{-webkit-line-clamp:unset;overflow:visible}
 .match-right{text-align:right;flex-shrink:0}
-.match-score-big{font-family:var(--heading);font-size:27px;font-weight:400;letter-spacing:-.5px;line-height:1}
+.match-score-big{font-family:var(--heading);font-size:24px;font-weight:400;letter-spacing:-.5px;line-height:1;color:var(--muted2)}
+.match-score-big.up{color:var(--green)}
 .match-rank-txt{font-size:9px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-top:4px}
 .result-pill{display:inline-block;font-size:10px;font-weight:700;letter-spacing:1.5px;padding:3px 9px;border-radius:99px;margin-top:4px}
 .pill-w{background:var(--green-light);color:var(--green)}
@@ -194,7 +208,7 @@ nav{
   .left-sidebar{display:none}
   nav{left:0;padding:0 20px;height:72px}
   .page{margin-left:0;padding:92px 20px 48px}
-  .hero{flex-direction:column;align-items:flex-start}
+  .hero{flex-direction:row;align-items:center}
   .hero-heading{font-size:28px}
   /* Clean 2x2 stat cards */
   .stats-row{grid-template-columns:1fr 1fr;gap:12px}
@@ -235,8 +249,7 @@ nav{
 .bnav-tab.active::before{content:"";position:absolute;top:0;width:26px;height:2px;background:var(--accent);border-radius:2px;}
 
 @media(max-width:768px){
-  .mobile-nav{display:flex}
-  .page{padding-top:72px;padding-bottom:96px}
+  .page{padding-top:20px;padding-bottom:96px}
   .bottom-nav{display:flex;position:fixed;left:0;right:0;bottom:0;top:auto;z-index:300;background:var(--bg);border-top:1px solid var(--border2);padding:6px 6px calc(10px + env(safe-area-inset-bottom,0px));}
 }
 </style>
@@ -323,18 +336,25 @@ nav{
 
       <div class="hero fade-in">
         <div class="hero-left">
-          <div class="hero-eyebrow">Member Profile</div>
-          <div class="hero-heading" id="heroName">—</div>
-          <div class="hero-subcopy" id="heroSub">—</div>
-          <div class="cache-label" id="cacheLabel"></div>
+          <span class="hero-avatar" id="heroAvatar">—</span>
+          <div>
+            <div class="hero-name-row"><span class="hero-heading" id="heroName">—</span><span class="hero-badge" id="heroBadge">✓</span></div>
+            <div class="hero-subcopy" id="heroSub">—</div>
+            <div class="cache-label" id="cacheLabel"></div>
+          </div>
         </div>
-        <button class="refresh-btn" id="refreshBtn" onclick="handleRefresh()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="23 4 23 10 17 10"/>
-            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
-          </svg>
-          Refresh
-        </button>
+        <div class="hero-actions">
+          <button class="icon-btn" id="refreshBtn" onclick="handleRefresh()" aria-label="Refresh" title="Refresh">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+            </svg>
+          </button>
+          <button class="icon-btn" onclick="handleLogout()" aria-label="Sign out" title="Sign out">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+          </button>
+        </div>
       </div>
 
       <div class="stats-rule"></div>
@@ -593,7 +613,7 @@ function getDemoData() {
     AM('BPAM014','2026-07-04',130,1,'13,16,16,16,17,14,18,11,9', ['Yuvraj','Mayank','Tanish K','Siddhant B','Tansheer','Aman','Ayaan','Anshuman','Aryaman G','Vedansh','Chandraditya R']),
     AM('BPAM015','2026-07-10',112,1,'8,11,11,11,11,6,12,12,9,11,10', ['Viraj','Vaibhav R','Yuvraj','Tansheer','Eshdeep B','Madhav D','Amaya'])
   ];
-  const player = { name:'Nik S', rating:3.5, ranking:1, venue:'Breakpoint', joiningDate:'05 Apr 2026', totalPoints:1127, ratingHistory:'05.04.2026,3.2;14.05.2026,3.3;17.06.2026,3.4;10.07.2026,3.5' };
+  const player = { name:'Nik S', rating:3.5, ranking:1, venue:'Break Point', verified:true, joiningDate:'05 Apr 2026', totalPoints:1127, ratingHistory:'05.04.2026,3.2;14.05.2026,3.3;17.06.2026,3.4;10.07.2026,3.5' };
   return { player, matches };
 }
 
@@ -670,22 +690,24 @@ function setRefreshState(loading) {
   if (!btn) return;
   btn.disabled = loading;
   btn.classList.toggle('spinning', loading);
-  btn.querySelector('span') && (btn.querySelector('span').textContent = loading ? 'Updating…' : 'Refresh');
-  // Update text node directly since button has SVG + text
-  const textNodes = [...btn.childNodes].filter(n => n.nodeType === 3);
-  if (textNodes.length) textNodes[textNodes.length - 1].textContent = loading ? ' Updating…' : ' Refresh';
 }
 
 // ── Render ────────────────────────────────────────────────────
+const AV_COLORS = ["#7c6fc9","#5b6472","#2f8f83","#c1614f","#3f9d7f","#4f7cc1","#a85a86","#b1793f"];
+function initialsOf(name){const parts=String(name||'').trim().split(/\s+/).filter(Boolean);if(!parts.length)return'?';return parts.length===1?parts[0].slice(0,2).toUpperCase():(parts[0][0]+parts[parts.length-1][0]).toUpperCase();}
+function avColorOf(name){let h=0;const s=String(name||'');for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return AV_COLORS[h%AV_COLORS.length];}
 function showDashboard() {
   const p = currentPlayer;
   document.getElementById('heroName').textContent   = p.name   || '—';
+  const av = document.getElementById('heroAvatar');
+  av.textContent = initialsOf(p.name); av.style.background = avColorOf(p.name);
+  document.getElementById('heroBadge').hidden = !(p.verified === true || String(p.verified).toUpperCase() === 'TRUE');
   document.getElementById('heroRating').textContent = p.rating ?? '—';
   const firstMatchDate = allMatches.length
     ? allMatches.slice().sort((a,b) => new Date(a.date)-new Date(b.date))[0].date
     : null;
   const memberSince = firstMatchDate ? formatDate(firstMatchDate) : (p.joiningDate || '—');
-  document.getElementById('heroSub').textContent = `${p.venue || 'Delhi'}`;
+  document.getElementById('heroSub').textContent = `${p.venue || 'Delhi'} · Member`;
   document.getElementById('statRank').textContent = p.ranking ? '#' + p.ranking : '—';
   const totalPts = allMatches
     .filter(m => String(m.matchId).toUpperCase().includes('AM'))
@@ -844,6 +866,10 @@ function renderMatches() {
     container.innerHTML=`<div class="empty-state"><div class="empty-title">No matches found</div><div class="empty-sub">Try changing the filters or get on court!</div></div>`;
     return;
   }
+  const amChrono = [...allMatches].filter(m=>String(m.matchId).toUpperCase().includes('AM') && m.date).sort((a,b)=>new Date(a.date)-new Date(b.date));
+  const jumpById = {};
+  amChrono.forEach((m,i)=>{ if(i>0){ const prev=Number(amChrono[i-1].rank), cur=Number(m.rank); if(!isNaN(prev)&&!isNaN(cur)) jumpById[m.matchId]=prev-cur; } });
+  list.forEach(m=>{ m._jump = jumpById[m.matchId]; });
   container.innerHTML = list.map((m,i)=>buildMatchCard(m,i)).join('');
 }
 
@@ -863,10 +889,16 @@ function buildMatchCard(m, idx) {
   const isLow     = isAm ? (rankNum >= 5) : (m.result === 'L');
   const leadTxt   = isAm ? (m.rank ?? '—') : (m.result || '–');
   const leadCls   = isPodium ? 'podium' : (isLow ? 'low' : '');
-  const metaExtra = '';
-  const rightBlock = isAm
-    ? `<div class="match-score-big">${m.total??'—'}</div><div class="match-rank-txt">points</div>`
-    : `<div class="match-score-big">${m.score||'—'}</div><div class="match-rank-txt">${m.result==='W'?'win':m.result==='L'?'loss':''}</div>`;
+  const jump = m._jump;
+  const jumpHtml = (jump && jump > 0) ? `<span class="jump up">▲${jump}</span>`
+                 : (jump && jump < 0) ? `<span class="jump down">▼${-jump}</span>` : '';
+  const shortDate = m.date ? new Date(m.date).toLocaleDateString('en-IN',{day:'numeric',month:'short'}) : '—';
+  const subTxt = isAm
+    ? `${shortDate} · #${m.rank ?? '—'}${jumpHtml}`
+    : `${shortDate}${m.result==='W'?' · won':m.result==='L'?' · lost':''}`;
+  const scoreVal = isAm ? m.total : (m.score ?? m.total);
+  const scoreCls = isPodium ? 'up' : '';
+  const rightBlock = `<div class="match-score-big ${scoreCls}">+${scoreVal ?? '—'}</div>`;
   const maxRound    = rounds.length ? Math.max(...rounds.map(r=>Number(r)||0)) : null;
   const roundsHtml  = isAm&&rounds.length
     ? `<div style="font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Rounds</div>
@@ -874,14 +906,12 @@ function buildMatchCard(m, idx) {
     : '';
   const expandHtml  = isAm ? buildAmericanoExpand(m) : buildMatchExpand(m);
   return `<div class="match-card" onclick="toggleExpand(${idx})">
-    <div class="match-lead ${leadCls}">${leadTxt}</div>
     <div class="match-main">
-      <div class="match-id-date"><span class="match-id">${m.matchId}</span><div class="match-dot"></div><span class="match-date-txt">${formatDate(m.date)||'—'}${metaExtra}</span></div>
       <div class="match-title">${typeName}</div>
-      <div class="match-detail">${isAm ? '' : (opponentNames||'—')}</div>
+      <div class="match-sub">${subTxt}</div>
       <div class="match-expand" id="expand-${idx}">${roundsHtml}${expandHtml}</div>
     </div>
-    <div class="match-right">${rightBlock}<div class="match-tap-hint" aria-hidden="true">tap for details</div></div>
+    <div class="match-right">${rightBlock}</div>
   </div>`;
 }
 
