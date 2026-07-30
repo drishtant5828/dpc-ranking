@@ -52,16 +52,15 @@ h1, h2, h3, p, table { margin: 0; }
 .page-wrap { min-height: 100vh; }
 
 .leaderboard-card {
-  width: 100%; max-width: none; margin: 0;
+  width: 100%; max-width: none; margin: 0; position: relative;
   background: transparent; border: none; box-shadow: none;
 }
 
 /* ── Top bar ── */
 .topbar {
   display: flex; justify-content: flex-end; align-items: center; gap: 16px;
-  padding: 9px max(20px, calc((100% - 760px) / 2)) 0;
-  background: #fff;
-  position: sticky; top: 0; z-index: 50;
+  padding: 0; background: transparent;
+  position: absolute; top: 14px; right: max(20px, calc((100% - 760px) / 2)); z-index: 50;
 }
 .brand-lockup { display: none; }
 .hero-banner, .standings-section, .card-footer {
@@ -72,7 +71,7 @@ h1, h2, h3, p, table { margin: 0; }
 .topbar-tools { display: flex; align-items: center; gap: 12px; }
 .page-switcher select {
   appearance: none;
-  padding: 7px 30px 7px 14px;
+  padding: 5px 26px 5px 12px;
   border: 1px solid var(--line);
   border-radius: 99px;
   background:
@@ -82,14 +81,14 @@ h1, h2, h3, p, table { margin: 0; }
   background-size: 5px 5px, 5px 5px;
   background-repeat: no-repeat;
   color: var(--muted2);
-  font: inherit; font-size: 0.72rem; font-weight: 500;
+  font: inherit; font-size: 0.66rem; font-weight: 500;
   letter-spacing: 0.04em; cursor: pointer;
 }
 .page-switcher select option { background: #fff; color: var(--ink); }
 .topbar-meta { display: none; }
 
 /* ── Hero ── */
-.hero-banner { display: flex; align-items: flex-start; gap: 8px; padding: 0 20px 14px; background: #fff; border-bottom: 1px solid var(--line); }
+.hero-banner { display: flex; align-items: flex-start; gap: 8px; padding: 14px 20px 14px; background: #fff; border-bottom: 1px solid var(--line); }
 .slash { font-family: var(--serif); font-size: clamp(2.6rem, 11vw, 3.3rem); line-height: 0.92; color: var(--accent); font-weight: 400; margin-top: 6px; }
 .hero-copy { text-align: left; }
 .hero-copy h1 {
