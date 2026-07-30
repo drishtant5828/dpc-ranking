@@ -308,6 +308,6 @@ tbody tr.highlight td { background: var(--accent-soft); }
   .bottom-nav { display: none; }
   .topbar { background: transparent; border-bottom: none; justify-content: flex-end; padding: 26px 40px 0; position: static; }
   .topbar .brand-lockup { display: none; }
-  .hero-banner { padding-top: 8px; }
+  .hero-banner { padding-top: 8px; background: transparent; border-bottom: none; }
   .hero-banner, .standings-section, .card-footer { max-width: 860px; margin-left: auto; }
 }
