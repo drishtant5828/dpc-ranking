@@ -396,8 +396,9 @@ nav{
         <div class="chart-header">
           <div class="chart-title">Performance Over Time</div>
           <div class="chart-toggle">
-            <button class="chart-toggle-btn active" id="chartBtnPoints" onclick="switchChart('points')">Points Scored</button>
-            <button class="chart-toggle-btn" id="chartBtnRanking" onclick="switchChart('rating')">Rating</button>
+            <button class="chart-toggle-btn active" id="chartBtnPoints" onclick="switchChart('points')">Score</button>
+            <button class="chart-toggle-btn" id="chartBtnRating" onclick="switchChart('rating')">Rating</button>
+            <button class="chart-toggle-btn" id="chartBtnRanking" onclick="switchChart('ranking')">Ranking</button>
           </div>
         </div>
         <div class="chart-wrap">
@@ -684,7 +685,7 @@ function showDashboard() {
     ? allMatches.slice().sort((a,b) => new Date(a.date)-new Date(b.date))[0].date
     : null;
   const memberSince = firstMatchDate ? formatDate(firstMatchDate) : (p.joiningDate || '—');
-  document.getElementById('heroSub').textContent = `${p.venue || 'Delhi'} · Member since ${memberSince}`;
+  document.getElementById('heroSub').textContent = `${p.venue || 'Delhi'}`;
   document.getElementById('statRank').textContent = p.ranking ? '#' + p.ranking : '—';
   const totalPts = allMatches
     .filter(m => String(m.matchId).toUpperCase().includes('AM'))
@@ -747,7 +748,8 @@ function renderStats() {
 function switchChart(mode) {
   chartMode = mode;
   document.getElementById('chartBtnPoints').classList.toggle('active', mode === 'points');
-  document.getElementById('chartBtnRanking').classList.toggle('active', mode === 'rating');
+  document.getElementById('chartBtnRating').classList.toggle('active', mode === 'rating');
+  document.getElementById('chartBtnRanking').classList.toggle('active', mode === 'ranking');
   renderChart(mode);
 }
 
@@ -773,20 +775,23 @@ function parseHistory(historyStr) {
 function renderChart(mode) {
   const canvas = document.getElementById('perfChart');
   const empty  = document.getElementById('chartEmpty');
-  let labels, data, label, color, yReverse;
+  let labels, data, label, color='#2e4e8e', yReverse=false;
+  const monthLbl = d => { const dt = new Date(d); return isNaN(dt) ? String(d) : dt.toLocaleDateString('en-IN',{month:'short'}); };
+  const dedupe = arr => { let last=''; return arr.map(x => { const l = x===last ? '' : x; last=x; return l; }); };
 
   if (mode === 'rating') {
     const history = parseHistory(currentPlayer?.ratingHistory || '');
     if (history.length < 1) { canvas.style.display='none'; empty.style.display='flex'; return; }
-    labels=history.map(h=>h.date); data=history.map(h=>h.value);
-    label='Rating'; color='#2e4e8e'; yReverse=false;
+    labels=dedupe(history.map(h=>monthLbl(h.date))); data=history.map(h=>h.value);
+    label='Rating';
   } else {
     const sorted = [...allMatches]
       .filter(m => m.date && String(m.matchId).toUpperCase().includes('AM'))
       .sort((a,b) => new Date(a.date)-new Date(b.date));
     if (sorted.length < 1) { canvas.style.display='none'; empty.style.display='flex'; return; }
-    labels=sorted.map(m=>formatDate(m.date)); data=sorted.map(m=>Number(m.total)||0);
-    label='Points Scored'; color='#2e4e8e'; yReverse=false;
+    labels=dedupe(sorted.map(m=>monthLbl(m.date)));
+    if (mode === 'ranking') { data=sorted.map(m=>Number(m.rank)||null); label='Ranking'; yReverse=true; }
+    else { data=sorted.map(m=>Number(m.total)||0); label='Points Scored'; }
   }
 
   canvas.style.display='block'; empty.style.display='none';
@@ -798,8 +803,8 @@ function renderChart(mode) {
       responsive:true, maintainAspectRatio:false,
       plugins:{ legend:{display:false}, tooltip:{backgroundColor:'#171513',titleColor:'rgba(255,255,255,.5)',bodyColor:'#fff',padding:10,cornerRadius:8,titleFont:{size:10,family:'DM Sans'},bodyFont:{size:13,family:'DM Sans',weight:'600'}} },
       scales:{
-        x:{grid:{color:'rgba(23,21,19,.05)'},ticks:{font:{size:10,family:'DM Sans'},color:'rgba(23,21,19,.4)',maxTicksLimit:8}},
-        y:{reverse:yReverse,grid:{color:'rgba(23,21,19,.05)'},ticks:{font:{size:10,family:'DM Sans'},color:'rgba(23,21,19,.4)',maxTicksLimit:6}}
+        x:{grid:{display:false},border:{display:false},ticks:{font:{size:10,family:'DM Sans'},color:'rgba(23,21,19,.4)',autoSkip:false}},
+        y:{reverse:yReverse,grid:{display:false},border:{display:false},ticks:{font:{size:10,family:'DM Sans'},color:'rgba(23,21,19,.4)',maxTicksLimit:5}}
       }
     }
   });
@@ -858,8 +863,7 @@ function buildMatchCard(m, idx) {
   const isLow     = isAm ? (rankNum >= 5) : (m.result === 'L');
   const leadTxt   = isAm ? (m.rank ?? '—') : (m.result || '–');
   const leadCls   = isPodium ? 'podium' : (isLow ? 'low' : '');
-  const playerCount = isAm ? (m.opponents||[]).length + 1 : null;
-  const metaExtra = isAm && playerCount ? ` · ${playerCount} players` : '';
+  const metaExtra = '';
   const rightBlock = isAm
     ? `<div class="match-score-big">${m.total??'—'}</div><div class="match-rank-txt">points</div>`
     : `<div class="match-score-big">${m.score||'—'}</div><div class="match-rank-txt">${m.result==='W'?'win':m.result==='L'?'loss':''}</div>`;
@@ -874,7 +878,7 @@ function buildMatchCard(m, idx) {
     <div class="match-main">
       <div class="match-id-date"><span class="match-id">${m.matchId}</span><div class="match-dot"></div><span class="match-date-txt">${formatDate(m.date)||'—'}${metaExtra}</span></div>
       <div class="match-title">${typeName}</div>
-      <div class="match-detail">${opponentNames||'—'}</div>
+      <div class="match-detail">${isAm ? '' : (opponentNames||'—')}</div>
       <div class="match-expand" id="expand-${idx}">${roundsHtml}${expandHtml}</div>
     </div>
     <div class="match-right">${rightBlock}<div class="match-tap-hint" aria-hidden="true">tap for details</div></div>

@@ -88,8 +88,8 @@ h1, h2, h3, p, table { margin: 0; }
 .topbar-meta { display: none; }
 
 /* ── Hero ── */
-.hero-banner { display: flex; align-items: flex-start; gap: 8px; padding: 10px 20px 4px; background: transparent; }
-.slash { display: none; }
+.hero-banner { display: flex; align-items: baseline; gap: 8px; padding: 10px 20px 4px; background: transparent; }
+.slash { font-family: var(--serif); font-size: 1.6rem; line-height: 1; color: var(--accent); font-weight: 600; }
 .hero-copy { text-align: left; }
 .hero-copy h1 {
   font-family: var(--serif); font-size: 1.6rem;
@@ -104,7 +104,7 @@ h1, h2, h3, p, table { margin: 0; }
 /* ── Standings ── */
 .standings-section { padding: 0 20px 20px; }
 .stacked-sections { display: grid; gap: 0; }
-.standings-head { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 14px; }
+.standings-head { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 14px; position: relative; }
 .section-kicker { font-size: 0.62rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.2em; }
 .refresh-button {
   appearance: none; border: 1px solid var(--line); background: transparent; color: var(--muted2);
@@ -116,11 +116,11 @@ h1, h2, h3, p, table { margin: 0; }
 
 /* Info button + popover (rank/rating/score) */
 .standings-head > div { display: flex; align-items: center; gap: 8px; }
-.info { position: relative; }
+.info { position: static; }
 .info-btn { list-style: none; cursor: pointer; width: 18px; height: 18px; border-radius: 50%; border: 1px solid var(--line); color: var(--muted2); font-family: var(--serif); font-style: italic; font-size: 11px; display: inline-flex; align-items: center; justify-content: center; }
 .info-btn::-webkit-details-marker { display: none; }
 .info-btn:hover { color: var(--ink); border-color: var(--muted); }
-.info-pop { position: absolute; top: 26px; left: 0; z-index: 20; width: 260px; background: var(--card2); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; box-shadow: 0 12px 30px rgba(23, 21, 19, 0.15); }
+.info-pop { position: absolute; top: 34px; left: 0; right: auto; z-index: 20; width: min(280px, calc(100vw - 40px)); background: var(--card2); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; box-shadow: 0 12px 30px rgba(23, 21, 19, 0.15); }
 .info-pop p { font-size: 0.78rem; color: var(--muted2); line-height: 1.5; margin: 0 0 8px; }
 .info-pop p b { color: var(--ink); font-weight: 600; }
 .info-pop a { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.04em; color: var(--accent); text-decoration: none; }
