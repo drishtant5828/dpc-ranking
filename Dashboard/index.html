@@ -411,8 +411,8 @@ nav{
         <div class="chart-header">
           <div class="chart-title">Performance Over Time</div>
           <div class="chart-toggle">
-            <button class="chart-toggle-btn active" id="chartBtnPoints" onclick="switchChart('points')">Score</button>
-            <button class="chart-toggle-btn" id="chartBtnRating" onclick="switchChart('rating')">Rating</button>
+            <button class="chart-toggle-btn" id="chartBtnPoints" onclick="switchChart('points')">Score</button>
+            <button class="chart-toggle-btn active" id="chartBtnRating" onclick="switchChart('rating')">Rating</button>
             <button class="chart-toggle-btn" id="chartBtnRanking" onclick="switchChart('ranking')">Ranking</button>
           </div>
         </div>
@@ -457,7 +457,7 @@ let allMatches    = [];
 let currentPlayer = null;
 let activeFilters = { date: '30', type: 'all' };
 let perfChart     = null;
-let chartMode     = 'points';
+let chartMode     = 'rating';
 
 // ── Helpers ───────────────────────────────────────────────────
 function formatDate(dateStr) {
@@ -648,13 +648,16 @@ async function bootstrapDashboard() {
 
   // 2. No valid cache → fetch from API (first visit or expired)
   setRefreshState(true);
-  const { player, matches } = await fetchFromAPI(savedPhone);
-  currentPlayer = player;
-  allMatches    = matches;
-  saveCache(savedPhone, player, matches);
-  showDashboard();
-  updateCacheLabel(Date.now());
-  setRefreshState(false);
+  try {
+    const { player, matches } = await fetchFromAPI(savedPhone);
+    currentPlayer = player;
+    allMatches    = matches;
+    saveCache(savedPhone, player, matches);
+    showDashboard();
+    updateCacheLabel(Date.now());
+  } finally {
+    setRefreshState(false);
+  }
 
   // Also update session with fresh player data
   localStorage.setItem(SESSION_KEY, JSON.stringify(currentPlayer));
@@ -667,14 +670,17 @@ async function handleRefresh() {
   if (!session) { window.location.href = '/login/'; return; }
 
   setRefreshState(true);
-  const { player, matches } = await fetchFromAPI(session.savedPhone);
-  currentPlayer = player;
-  allMatches    = matches;
-  clearDataCache();
-  saveCache(session.savedPhone, player, matches);
-  showDashboard();
-  updateCacheLabel(Date.now());
-  setRefreshState(false);
+  try {
+    const { player, matches } = await fetchFromAPI(session.savedPhone);
+    currentPlayer = player;
+    allMatches    = matches;
+    clearDataCache();
+    saveCache(session.savedPhone, player, matches);
+    showDashboard();
+    updateCacheLabel(Date.now());
+  } finally {
+    setRefreshState(false);
+  }
 
   localStorage.setItem(SESSION_KEY, JSON.stringify(currentPlayer));
   localStorage.setItem(SESSION_SAVED_AT_KEY, String(Date.now()));
@@ -713,7 +719,7 @@ function showDashboard() {
   renderForm();
   renderStats();
   renderMatches();
-  renderChart('points');
+  renderChart(chartMode);
 }
 
 function renderRatingTrend() {
@@ -766,13 +772,7 @@ function renderForm() {
 }
 
 function renderStats() {
-  const all   = getFiltered('all', 'all');
-  const total = all.length;
-  document.getElementById('statMatches').textContent    = total;
-  document.getElementById('statMatchesSub').textContent =
-    `${all.filter(m=>String(m.matchId).toUpperCase().includes('AM')).length} americano · ` +
-    `${all.filter(m=>String(m.matchId).toUpperCase().includes('TM')).length} tournament · ` +
-    `${all.filter(m=>String(m.matchId).toUpperCase().includes('PS')).length} personal`;
+  document.getElementById('statMatches').textContent = getFiltered('all', 'all').length;
 }
 
 function switchChart(mode) {
