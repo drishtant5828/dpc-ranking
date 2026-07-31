@@ -362,7 +362,7 @@ nav{
         <div class="stat-card">
           <div class="stat-top">
             <span class="stat-icon"><svg viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0V4zM17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg></span>
-            <div class="stat-num" id="statRank">—</div>
+            <div class="stat-num"><span id="statRank">—</span><span class="stat-trend" id="rankTrend"></span></div>
           </div>
           <div class="stat-label">Ranking</div>
         </div>
@@ -613,7 +613,7 @@ function getDemoData() {
     AM('BPAM014','2026-07-04',130,1,'13,16,16,16,17,14,18,11,9', ['Yuvraj','Mayank','Tanish K','Siddhant B','Tansheer','Aman','Ayaan','Anshuman','Aryaman G','Vedansh','Chandraditya R']),
     AM('BPAM015','2026-07-10',112,1,'8,11,11,11,11,6,12,12,9,11,10', ['Viraj','Vaibhav R','Yuvraj','Tansheer','Eshdeep B','Madhav D','Amaya'])
   ];
-  const player = { name:'Nik S', rating:3.5, ranking:1, venue:'Break Point', verified:true, joiningDate:'05 Apr 2026', totalPoints:1127, ratingHistory:'05.04.2026,3.2;14.05.2026,3.3;17.06.2026,3.4;10.07.2026,3.5' };
+  const player = { name:'Nik S', rating:3.5, ranking:1, venue:'Break Point', verified:true, joiningDate:'05 Apr 2026', totalPoints:1127, ratingHistory:'05.04.2026,3.2;14.05.2026,3.3;17.06.2026,3.4;10.07.2026,3.5', rankingHistory:'05.04.2026,4;17.06.2026,3;10.07.2026,1' };
   return { player, matches };
 }
 
@@ -714,6 +714,7 @@ function showDashboard() {
     .reduce((sum, m) => sum + (Number(m.total) || 0), 0);
   document.getElementById('statPoints').textContent = totalPts || (p.totalPoints ?? '—');
   renderRatingTrend();
+  renderRankTrend();
   renderForm();
   renderStats();
   renderMatches();
@@ -731,6 +732,18 @@ function renderRatingTrend() {
   if (rounded > 0)      { el.textContent = '▲ ' + rounded.toFixed(1);        el.className = 'stat-trend up'; }
   else if (rounded < 0) { el.textContent = '▼ ' + Math.abs(rounded).toFixed(1); el.className = 'stat-trend down'; }
   else                  { el.textContent = '– 0.0';                          el.className = 'stat-trend flat'; }
+}
+
+function renderRankTrend() {
+  const el = document.getElementById('rankTrend');
+  if (!el) return;
+  const history = parseHistory(currentPlayer?.rankingHistory || '').filter(h => h.value != null);
+  if (history.length < 2) { el.textContent = ''; el.className = 'stat-trend'; return; }
+  // lower rank number is better, so improvement = previous - current
+  const delta = history[history.length - 2].value - history[history.length - 1].value;
+  if (delta > 0)      { el.textContent = '▲ ' + delta;        el.className = 'stat-trend up'; }
+  else if (delta < 0) { el.textContent = '▼ ' + Math.abs(delta); el.className = 'stat-trend down'; }
+  else                { el.textContent = ''; el.className = 'stat-trend'; }
 }
 
 function renderForm() {
@@ -866,10 +879,6 @@ function renderMatches() {
     container.innerHTML=`<div class="empty-state"><div class="empty-title">No matches found</div><div class="empty-sub">Try changing the filters or get on court!</div></div>`;
     return;
   }
-  const amChrono = [...allMatches].filter(m=>String(m.matchId).toUpperCase().includes('AM') && m.date).sort((a,b)=>new Date(a.date)-new Date(b.date));
-  const jumpById = {};
-  amChrono.forEach((m,i)=>{ if(i>0){ const prev=Number(amChrono[i-1].rank), cur=Number(m.rank); if(!isNaN(prev)&&!isNaN(cur)) jumpById[m.matchId]=prev-cur; } });
-  list.forEach(m=>{ m._jump = jumpById[m.matchId]; });
   container.innerHTML = list.map((m,i)=>buildMatchCard(m,i)).join('');
 }
 
@@ -889,12 +898,9 @@ function buildMatchCard(m, idx) {
   const isLow     = isAm ? (rankNum >= 5) : (m.result === 'L');
   const leadTxt   = isAm ? (m.rank ?? '—') : (m.result || '–');
   const leadCls   = isPodium ? 'podium' : (isLow ? 'low' : '');
-  const jump = m._jump;
-  const jumpHtml = (jump && jump > 0) ? `<span class="jump up">▲${jump}</span>`
-                 : (jump && jump < 0) ? `<span class="jump down">▼${-jump}</span>` : '';
   const shortDate = m.date ? new Date(m.date).toLocaleDateString('en-IN',{day:'numeric',month:'short'}) : '—';
   const subTxt = isAm
-    ? `${shortDate} · #${m.rank ?? '—'}${jumpHtml}`
+    ? `${shortDate} · #${m.rank ?? '—'}`
     : `${shortDate}${m.result==='W'?' · won':m.result==='L'?' · lost':''}`;
   const scoreVal = isAm ? m.total : (m.score ?? m.total);
   const scoreCls = isPodium ? 'up' : '';
