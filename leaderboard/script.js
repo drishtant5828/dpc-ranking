@@ -249,7 +249,7 @@ function renderCrossBoard(query) {
   if (query.length >= 2 && allData) {
     for (const b of BOARDS) {
       if (b.page === here) continue;
-      for (const p of b.rows(allData)) {
+      for (const p of qualifyByMatches(b.rows(allData))) {
         if (p.name.toLowerCase().includes(query)) results.push({ p, page: b.page, label: b.label });
       }
     }
@@ -546,6 +546,16 @@ function compareByScore(a, b) {
   return a.name.localeCompare(b.name);
 }
 
+// Leaderboard only ranks players with at least MIN_MATCHES games played.
+// Drops everyone below the threshold, then renumbers ranks 1..N on the
+// qualifying set (assumes the input is already sorted by standing).
+const MIN_MATCHES = 2;
+function qualifyByMatches(players, min = MIN_MATCHES) {
+  return players
+    .filter((p) => (Number(p.matches) || 0) >= min)
+    .map((p, i) => ({ ...p, rank: i + 1 }));
+}
+
 // ─── RENDERERS ───────────────────────────────────────────────────────────────
 
 function getViewerName() {
@@ -589,7 +599,6 @@ function ensureVerifiedLegend(target, anyVerified) {
   } else if (!anyVerified && leg) { leg.remove(); }
 }
 
-const CROWN_SVG = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 8l3.5 3L12 5l5.5 6L21 8l-1.5 10h-15L3 8z"/></svg>';
 function podiumMarkup(top3, opts) {
   const order = [top3[1], top3[0], top3[2]];
   const slot  = ["second", "first", "third"];
@@ -604,6 +613,7 @@ function podiumMarkup(top3, opts) {
       </div>
       <div class="podium-name"><span>${escapeHtml(p.name)}</span>${verifiedBadge(p)}</div>
       <div class="podium-value">${opts.value(p)}</div>
+      ${opts.podSub ? `<div class="podium-score">${escapeHtml(String(opts.podSub(p)))}</div>` : ""}
       <div class="podium-block">${label[s]}</div>
     </div>`;
   }).join("");
@@ -718,6 +728,7 @@ function renderTournamentTable(target, rankings, colspan, emptyMessage = "No tou
 function renderOverallTable(target, rankings, colspan) {
   if (!target) return;
   ensureSearchUi(target);
+  rankings = qualifyByMatches(rankings); // ranking only counts players with >=2 matches
   if (!rankings.length) { renderMessageRow(target, "No overall entries yet.", colspan); return; }
   const viewer = getViewerName();
   const listRankings = enhancePanel(target, rankings, {
