@@ -1,0 +1,7 @@
+# OS / local tooling
+.DS_Store
+.claude/
+
+# SECRETS — these contain the Supabase service_role key. Never commit/publish.
+**/supabase-sync.gs
+**/SUPABASE-SETUP.md
