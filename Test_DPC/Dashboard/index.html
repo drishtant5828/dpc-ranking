@@ -379,7 +379,7 @@ body{
   .app>div[style*="height:80px"]{display:none}
 }
 </style>
-<link rel="stylesheet" href="../tokens.css?v=1">
+<link rel="stylesheet" href="../tokens.css?v=3">
 </head>
 <body>
 
@@ -682,7 +682,7 @@ function parseHistory(str){
 
 function renderChart(mode){
   const ctx=document.getElementById('perfChart');
-  let labels,data,label,color='#15130f',yReverse=false;
+  let labels,data,label,color='#2e4e8e',yReverse=false;
   const mlbl=d=>{const x=new Date(d);return isNaN(x)?String(d):x.toLocaleDateString('en-IN',{month:'short'})};
   const dedupe=arr=>{let last='';return arr.map(x=>{const l=x===last?'':x;last=x;return l;})};
   const cap=document.getElementById('chartCaption');
@@ -866,7 +866,7 @@ function goToRanking(){
   const page = { firstserve:'index.html', breakpoint:'breakpoint.html', matchpoint:'matchpoint.html', noida:'noida.html' }[venue] || 'index.html';
   const nm = currentPlayer?.boardName || currentPlayer?.name;
   const q = nm ? '?q=' + encodeURIComponent(nm) : '';
-  window.location.href = '/leaderboard/' + page + q;
+  window.location.href = '../leaderboard/' + page + q;
 }
 
 function toggleInfo(){

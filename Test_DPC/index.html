@@ -3,14 +3,14 @@
 <head>
  <link rel="manifest" href="manifest.json">
 
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#2e4e8e">
 
-<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="logo.svg">
  
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>//PadelCollectiveIndia</title>
- <link rel="icon" type="image/png" href="logo.png">
+ <link rel="icon" type="image/svg+xml" href="logo.svg?v=1">
  <meta name="description" content="Delhi Padel Collective offers padel tournaments, rankings, coaching, americano events and community matches in Delhi NCR."/>
 
 <meta name="keywords" content="Delhi padel, padel Delhi NCR, Delhi Padel Collective, padel tournaments Delhi, padel club Delhi, americano padel Delhi, padel coaching Delhi, padel rankings
@@ -557,7 +557,7 @@ video::-webkit-media-controls-fullscreen-button {
 }
 
 </style>
-<link rel="stylesheet" href="tokens.css?v=1">
+<link rel="stylesheet" href="tokens.css?v=3">
 </head>
 <body>
 
@@ -920,13 +920,9 @@ video::-webkit-media-controls-fullscreen-button {
   window.addEventListener("load", tryPlay);
   window.addEventListener("load", syncDashboardCta);
   function applyAlert() {
-   window.location.href = "/Application/";
+   window.location.href = "Application/";
   }
 
-  document.getElementById("applyBtn").addEventListener("click", e => {
-    e.preventDefault(); 
-    applyAlert();
-  });
  if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('service-worker.js')

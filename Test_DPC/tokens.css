@@ -16,13 +16,14 @@
   --title:var(--font-display);
   --font-heading:var(--font-display);
 
-  /* ---- Brand accent: single source (near-black, mono/Tracksmith look).
-         Change this one line to re-theme the whole site. ---- */
-  --accent:#15130f;
-  --accent-hover:#000000;
-  --accent-light:rgba(21,19,15,.06);
-  --accent-soft:rgba(21,19,15,.06);
-  --accent-glow:rgba(21,19,15,.16);
+  /* ---- Brand accent: single source (First Serve blue).
+         Change this one line to re-theme the whole site.
+         Break Point / Noida / Match Point override this in leaderboard/styles.css. ---- */
+  --accent:#2e4e8e;
+  --accent-hover:#25406f;
+  --accent-light:rgba(46,78,142,.10);
+  --accent-soft:rgba(46,78,142,.10);
+  --accent-glow:rgba(46,78,142,.18);
   --navy:var(--accent);            /* calendar/coaching legacy alias */
 
   /* ---- Canvas: one off-white across all screens ---- */
@@ -56,6 +57,6 @@
 /* ---- Bottom-nav active state: filled rounded box everywhere (Dashboard style),
         replacing the per-page underline/colour-only variants. ---- */
 .bnav-tab{border-radius:12px;transition:background var(--dur),color var(--dur);}
-.bnav-tab.active{background:var(--accent-light)!important;color:var(--accent)!important;}
+.bnav-tab.active{background:var(--accent-soft)!important;color:var(--accent)!important;}
 .bnav-tab.active svg{stroke:var(--accent);}
 .bnav-tab.active::before{display:none!important;}  /* kill calendar underline bar */
