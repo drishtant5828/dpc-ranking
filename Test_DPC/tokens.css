@@ -1,0 +1,47 @@
+/* DPC shared design tokens — single source of truth.
+   Linked LAST in every page so it overrides each page's inline :root.
+   Legacy names are aliased to canonical ones so no page's markup needs rewriting.
+   Swap --accent here to re-theme the whole site. */
+
+/* Berling display face for every page (url resolves relative to this file). */
+@font-face{font-family:'Berling';src:url('Berling Bold.otf') format('opentype');font-weight:700;font-style:normal;font-display:swap;}
+
+:root{
+  /* ---- Type: Berling display + Inter body, one system everywhere ---- */
+  --font-display:'Berling',Georgia,'Times New Roman',serif;
+  --font-body-stack:'Inter',-apple-system,BlinkMacSystemFont,system-ui,'Helvetica Neue',Arial,sans-serif;
+  --font-body:var(--font-body-stack);
+  --body:var(--font-body-stack);
+  --display:var(--font-display);
+  --title:var(--font-display);
+  --font-heading:var(--font-display);
+
+  /* ---- Brand accent: single source (teal). Change this one line to re-theme. ---- */
+  --accent:#0d9488;
+  --accent-hover:#0b7c72;
+  --accent-light:rgba(13,148,136,.10);
+  --accent-soft:rgba(13,148,136,.10);
+  --accent-glow:rgba(13,148,136,.18);
+  --navy:var(--accent);            /* calendar/coaching legacy alias */
+
+  /* ---- Canvas: one off-white across all screens ---- */
+  --bg:#f2f4f8;
+  --surface:#ffffff;
+  --card:#ffffff;
+
+  /* ---- Semantic colours: consistent hexes sitewide ---- */
+  --success:#4a8c42; --green:#4a8c42;
+  --danger:#dc2626;  --red:#dc2626;
+  --amber:#d97706;
+  --violet:#7c3aed;  --purple:#7c3aed;
+
+  /* ---- Layout rhythm: shared page padding = aligned headings ---- */
+  --page-pad-x:20px;
+  --head-pad-top:22px;
+  --radius:16px;
+  --radius-sm:14px;
+
+  /* ---- Motion ---- */
+  --ease:cubic-bezier(.4,0,.2,1);
+  --dur:220ms;
+}

@@ -8,7 +8,7 @@
 <link rel="icon" type="image/png" href="../logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-<script src="config.js?v=5"></script>
+<script src="config.js?v=7"></script>
 <style>
 @font-face { font-family:'Berling'; src:url('../Berling Bold.otf') format('opentype'); font-weight:700; font-display:swap; }
 :root{
@@ -50,7 +50,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--body);-webkit-font-
 
 /* ── Shell ── */
 .shell{padding-left:0;}
-.container{max-width:760px;margin:0 auto;padding:22px 20px 40px;}
+.container{max-width:760px;margin:0 auto;padding:var(--head-pad-top) var(--page-pad-x) 40px;}
 
 /* ── Topbar (demo pill + my sessions) ── */
 .topbar{display:flex;justify-content:flex-end;align-items:center;gap:12px;margin-bottom:8px;}
@@ -89,6 +89,21 @@ body{background:var(--bg);color:var(--ink);font-family:var(--body);-webkit-font-
 .opt-card.selected{border-color:var(--accent);background:var(--accent-soft);}
 .opt-card h3{font-family:var(--title);font-size:1.05rem;font-weight:700;margin-bottom:4px;}
 .opt-card .meta{font-size:.72rem;color:var(--muted2);}
+
+/* ── Multi-select location cards ── */
+.opt-card.pick{position:relative;padding-right:44px;}
+.opt-card.pick .tick{position:absolute;top:14px;right:14px;width:19px;height:19px;border-radius:50%;border:1.5px solid var(--line2);display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;}
+.opt-card.pick.selected .tick{background:var(--accent);border-color:var(--accent);}
+.opt-card.pick.selected .tick::after{content:"✓";}
+
+/* ── Selected slots list ── */
+.selected-slots{margin-top:18px;}
+.sel-label{font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 2px 10px;}
+.sel-row{display:flex;align-items:center;justify-content:space-between;background:var(--card);border:1px solid var(--accent);border-radius:12px;padding:11px 14px;box-shadow:var(--shadow);margin-bottom:8px;}
+.sel-row .t{font-size:.88rem;font-weight:500;}
+.sel-row .t b{font-family:var(--title);font-weight:700;}
+.sel-row .x{color:var(--muted2);font-size:1.15rem;line-height:1;cursor:pointer;padding:0 4px;}
+.sel-row .x:hover{color:var(--ink);}
 
 /* ── Coach cards ── */
 .coach-list{display:flex;flex-direction:column;gap:12px;}
@@ -139,7 +154,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--body);-webkit-font-
 .type-price .per{font-size:.58rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:block;}
 .type-total{font-size:.82rem;color:var(--muted2);margin-top:16px;text-align:right;}
 .type-total strong{font-family:var(--display);font-size:1.2rem;color:var(--ink);margin-left:8px;}
-.join-banner{background:var(--accent-soft);border:1px solid rgba(46,78,142,.28);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:14px;font-size:.8rem;color:var(--muted2);line-height:1.65;}
+.join-banner{background:var(--accent-soft);border:1px solid var(--accent-glow);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:14px;font-size:.8rem;color:var(--muted2);line-height:1.65;}
 .join-banner strong{color:var(--ink);}
 
 /* ── Form ── */
@@ -169,7 +184,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--body);-webkit-font-
 .confirm-msg{font-size:.9rem;color:var(--muted2);line-height:1.7;max-width:420px;margin:0 auto 22px;}
 .confirm-id{font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted2);margin:14px 0 0;}
 .confirm-id strong{color:var(--accent);letter-spacing:.06em;}
-.bridge-note{background:var(--accent-soft);border:1px solid rgba(46,78,142,.28);border-radius:var(--radius-sm);padding:14px 16px;font-size:.82rem;color:var(--muted2);line-height:1.65;margin-top:16px;text-align:left;}
+.bridge-note{background:var(--accent-soft);border:1px solid var(--accent-glow);border-radius:var(--radius-sm);padding:14px 16px;font-size:.82rem;color:var(--muted2);line-height:1.65;margin-top:16px;text-align:left;}
 .bridge-note strong{color:var(--ink);}
 .confirm-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px;}
 
@@ -204,7 +219,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--body);-webkit-font-
   .left-sidebar{display:flex;}
   .bottom-nav{display:none;}
   .shell{padding-left:248px;}
-  .container{max-width:820px;padding:34px 48px 40px;}
+  .container{max-width:1080px;padding:34px 48px 40px;}
   body{padding-bottom:40px;}
   .slot-grid{grid-template-columns:repeat(4,1fr);}
 }
@@ -212,6 +227,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--body);-webkit-font-
   .form-row{grid-template-columns:1fr;}
 }
 </style>
+<link rel="stylesheet" href="../tokens.css">
 </head>
 <body>
 
@@ -247,9 +263,9 @@ body{background:var(--bg);color:var(--ink);font-family:var(--body);-webkit-font-
     </div>
 
     <div class="stepper" id="stepper">
-      <div class="step-dot" data-step="1"><span class="n">1</span><span>Location</span></div>
+      <div class="step-dot" data-step="1"><span class="n">1</span><span>Coach</span></div>
       <div class="step-line"></div>
-      <div class="step-dot" data-step="2"><span class="n">2</span><span>Coach</span></div>
+      <div class="step-dot" data-step="2"><span class="n">2</span><span>Location</span></div>
       <div class="step-line"></div>
       <div class="step-dot" data-step="3"><span class="n">3</span><span>Slot</span></div>
       <div class="step-line"></div>
@@ -258,27 +274,31 @@ body{background:var(--bg);color:var(--ink);font-family:var(--body);-webkit-font-
       <div class="step-dot" data-step="5"><span class="n">5</span><span>Details</span></div>
     </div>
 
-    <!-- STEP 1 — LOCATION -->
+    <!-- STEP 1 — COACH -->
     <section class="panel active" id="panel-1">
-      <h2 class="panel-title">Where do you want to train?</h2>
-      <p class="panel-sub">Choose a court location in Delhi NCR.</p>
-      <div class="opt-grid" id="locationGrid"><p class="empty-note">Loading locations…</p></div>
-    </section>
-
-    <!-- STEP 2 — COACH -->
-    <section class="panel" id="panel-2">
       <h2 class="panel-title">Choose your coach</h2>
-      <p class="panel-sub" id="coachSub">Coaches available at this location.</p>
-      <div class="coach-list" id="coachList"></div>
-      <div class="btn-row"><button class="btn btn-ghost" data-back="1">Back</button></div>
+      <p class="panel-sub">Pick who you'd like to train with — they'll reach out to lock in the details.</p>
+      <div class="coach-list" id="coachList"><p class="empty-note">Loading coaches…</p></div>
     </section>
 
-    <!-- STEP 3 — DATE + SLOT -->
+    <!-- STEP 2 — LOCATION (multi-select) -->
+    <section class="panel" id="panel-2">
+      <h2 class="panel-title">Which courts work for you?</h2>
+      <p class="panel-sub">Pick every location you can get to — select as many as you like.</p>
+      <div class="opt-grid" id="locationGrid"></div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" data-back="1">Back</button>
+        <button class="btn btn-accent" id="toStep3" disabled>Continue</button>
+      </div>
+    </section>
+
+    <!-- STEP 3 — SLOTS (multi-select, dates → times) -->
     <section class="panel" id="panel-3">
-      <h2 class="panel-title">Pick a date &amp; time</h2>
-      <p class="panel-sub">60-minute sessions, tagged by level.</p>
+      <h2 class="panel-title">Pick your slots</h2>
+      <p class="panel-sub">Tap a date, then the times you can make. Add as many as you like — your coach confirms one.</p>
       <div class="date-strip" id="dateStrip"></div>
       <div class="slot-grid" id="slotGrid"></div>
+      <div class="selected-slots" id="selectedSlots"></div>
       <div class="btn-row">
         <button class="btn btn-ghost" data-back="2">Back</button>
         <button class="btn btn-accent" id="toStep4" disabled>Continue</button>
@@ -353,11 +373,13 @@ body{background:var(--bg);color:var(--ink);font-family:var(--body);-webkit-font-
 
 <!-- ── Bottom nav (mobile) ── -->
 <div class="bottom-nav" role="navigation" aria-label="Primary">
-  <a class="bnav-tab" href="../"><svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><polyline points="9 21 9 12 15 12 15 21"/></svg><span>Home</span></a>
+
   <a class="bnav-tab" href="../Dashboard/"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg><span>Dashboard</span></a>
   <a class="bnav-tab" href="../leaderboard/"><svg viewBox="0 0 24 24"><rect x="18" y="3" width="3" height="18"/><rect x="11" y="8" width="3" height="13"/><rect x="4" y="13" width="3" height="8"/></svg><span>Leaderboard</span></a>
+  <a class="bnav-tab" href="../"><svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><polyline points="9 21 9 12 15 12 15 21"/></svg><span>Home</span></a>
   <a class="bnav-tab" href="../calender/"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg><span>Games</span></a>
   <a class="bnav-tab active" href="../coaching/"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 6.9H22l-5.8 4.3 2.2 6.8L12 16l-6.4 4 2.2-6.8L2 8.9h7.6z"/></svg><span>Coaching</span></a>
+
 </div>
 
 <!-- ── My Requests ── -->
@@ -380,8 +402,8 @@ body{background:var(--bg);color:var(--ink);font-family:var(--body);-webkit-font-
 // ============================================================
 const S = {
   step: 1,
-  location: null, coach: null, date: null, slot: null,
-  slotsByDate: {}, type: null, details: {}, booking: null,
+  coach: null, locations: [], slots: [], type: null, details: {}, booking: null,
+  slotsByDate: {}, currentDate: null,
 };
 const $ = (id) => document.getElementById(id);
 const LAST_STEP = 5;
@@ -408,32 +430,13 @@ document.querySelectorAll(".step-dot").forEach(d =>
     if (d.classList.contains("done") && S.step <= LAST_STEP) goTo(n);
   }));
 
-// ── Step 1: locations ───────────────────────────────────────
-async function loadLocations() {
-  try {
-    const locs = await API.fetchLocations();
-    $("locationGrid").innerHTML = "";
-    locs.forEach(loc => {
-      const btn = document.createElement("button");
-      btn.className = "opt-card";
-      btn.innerHTML = `<h3>${loc.name}</h3><div class="meta">${loc.area || ""} · ${loc.courts} court${loc.courts > 1 ? "s" : ""}</div>`;
-      btn.addEventListener("click", () => { S.location = loc; loadCoaches(); goTo(2); });
-      $("locationGrid").appendChild(btn);
-    });
-  } catch (e) {
-    $("locationGrid").innerHTML = `<p class="empty-note">Couldn't load locations — please refresh.</p>`;
-  }
-}
-
-// ── Step 2: coaches ─────────────────────────────────────────
+// ── Step 1: coaches (all) ───────────────────────────────────
 async function loadCoaches() {
-  $("coachSub").textContent = `Coaches available at ${S.location.name}.`;
-  $("coachList").innerHTML = `<p class="empty-note">Loading coaches…</p>`;
   try {
-    const coaches = await API.fetchCoaches(S.location.id);
+    const coaches = await API.fetchAllCoaches();
     $("coachList").innerHTML = "";
     if (!coaches.length) {
-      $("coachList").innerHTML = `<p class="empty-note">No coaches at this location yet — try another.</p>`;
+      $("coachList").innerHTML = `<p class="empty-note">No coaches available yet.</p>`;
       return;
     }
     coaches.forEach(c => {
@@ -445,10 +448,16 @@ async function loadCoaches() {
         <div class="coach-avatar">${c.photo ? `<img src="${c.photo}" alt="${c.name}"/>` : initials}</div>
         <div class="coach-info">
           <div class="coach-name">${c.name}</div>
-          <div class="coach-level">${c.level} · ${c.experience} experience</div>
+          <div class="coach-level">${c.level || ""}</div>
         </div>
         <div class="coach-price"><span class="from">From</span><span class="amt">₹${minPrice.toLocaleString("en-IN")}</span></div>`;
-      btn.addEventListener("click", () => { S.coach = c; loadSlots(); goTo(3); });
+      btn.addEventListener("click", () => {
+        S.coach = c;
+        document.querySelectorAll("#coachList .coach-card").forEach(x => x.classList.remove("selected"));
+        btn.classList.add("selected");
+        loadLocations();
+        goTo(2);
+      });
       $("coachList").appendChild(btn);
     });
   } catch (e) {
@@ -456,24 +465,68 @@ async function loadCoaches() {
   }
 }
 
-// ── Step 3: dates & slots ───────────────────────────────────
+// ── Step 2: locations (multi-select) ────────────────────────
+async function loadLocations() {
+  $("locationGrid").innerHTML = `<p class="empty-note">Loading locations…</p>`;
+  $("toStep3").disabled = S.locations.length === 0;
+  try {
+    const locs = await API.fetchLocations();
+    $("locationGrid").innerHTML = "";
+    locs.forEach(loc => {
+      const btn = document.createElement("button");
+      btn.className = "opt-card pick";
+      if (S.locations.some(l => l.id === loc.id)) btn.classList.add("selected");
+      btn.innerHTML = `<span class="tick"></span><h3>${loc.name}</h3><div class="meta">${loc.area || ""}</div>`;
+      btn.addEventListener("click", () => {
+        const i = S.locations.findIndex(l => l.id === loc.id);
+        if (i >= 0) { S.locations.splice(i, 1); btn.classList.remove("selected"); }
+        else { S.locations.push(loc); btn.classList.add("selected"); }
+        $("toStep3").disabled = S.locations.length === 0;
+      });
+      $("locationGrid").appendChild(btn);
+    });
+  } catch (e) {
+    $("locationGrid").innerHTML = `<p class="empty-note">Couldn't load locations — please refresh.</p>`;
+  }
+}
+$("toStep3").addEventListener("click", () => { loadSlots(); goTo(3); });
+
+// ── Step 3: slots (multi-select, dates → times) ─────────────
+const slotKey = (s) => `${s.location_id}|${s.date}|${s.start_time}`;
+
 async function loadSlots() {
-  S.date = null; S.slot = null;
+  S.slots = []; S.currentDate = null;
   $("toStep4").disabled = true;
   $("dateStrip").innerHTML = "";
+  $("selectedSlots").innerHTML = "";
   $("slotGrid").innerHTML = `<p class="empty-note" style="grid-column:1/-1">Loading availability…</p>`;
   try {
-    S.slotsByDate = await API.fetchSlots(S.coach.id, S.location.id);
-    const dates = Object.keys(S.slotsByDate).filter(d => S.slotsByDate[d].some(s => s.status === "open"));
+    const byDate = {};
+    for (const loc of S.locations) {
+      let res = {};
+      try { res = await API.fetchSlots(S.coach.id, loc.id); } catch (e) { res = {}; }
+      Object.keys(res).forEach(d => {
+        res[d].forEach(slot => {
+          if (slot.status !== "open") return;
+          (byDate[d] = byDate[d] || []).push({ ...slot, location_id: loc.id, location_name: loc.name });
+        });
+      });
+    }
+    Object.keys(byDate).forEach(d => byDate[d].sort((a, b) => a.start_time.localeCompare(b.start_time)));
+    S.slotsByDate = byDate;
+    const dates = Object.keys(byDate).sort();
     if (!dates.length) {
-      $("slotGrid").innerHTML = `<p class="empty-note" style="grid-column:1/-1">No open slots in the next two weeks — try another coach.</p>`;
+      $("dateStrip").innerHTML = "";
+      $("slotGrid").innerHTML = `<p class="empty-note" style="grid-column:1/-1">No open slots at these courts in the next two weeks.</p>`;
       return;
     }
+    $("dateStrip").innerHTML = "";
     dates.forEach((dateStr, i) => {
       const [y, m, d] = dateStr.split("-").map(Number);
       const dt = new Date(y, m - 1, d);
       const chip = document.createElement("button");
       chip.className = "date-chip";
+      chip.dataset.date = dateStr;
       chip.innerHTML = `
         <span class="dow">${dt.toLocaleDateString("en-IN", { weekday: "short" })}</span>
         <span class="dom">${dt.getDate()}</span>
@@ -487,29 +540,52 @@ async function loadSlots() {
   }
 }
 
-function slotSubLabel(slot) {
-  return slot.level ? `<span class="sub">${slot.level}</span>` : "";
-}
-
 function selectDate(dateStr, chip) {
-  S.date = dateStr; S.slot = null;
-  $("toStep4").disabled = true;
   document.querySelectorAll(".date-chip").forEach(c => c.classList.remove("selected"));
   chip.classList.add("selected");
+  S.currentDate = dateStr;
+  renderDateSlots(dateStr);
+}
+
+function renderDateSlots(dateStr) {
   $("slotGrid").innerHTML = "";
-  S.slotsByDate[dateStr].forEach(slot => {
+  const multiLoc = S.locations.length > 1;
+  (S.slotsByDate[dateStr] || []).forEach(slot => {
     const b = document.createElement("button");
     b.className = "slot-btn";
-    b.innerHTML = formatTime12(slot.start_time) + slotSubLabel(slot);
-    if (slot.status !== "open") b.disabled = true;
-    else b.addEventListener("click", () => {
-      S.slot = slot;
-      document.querySelectorAll(".slot-btn").forEach(x => x.classList.remove("selected"));
-      b.classList.add("selected");
-      $("toStep4").disabled = false;
+    const sub = multiLoc ? `<span class="sub">${slot.location_name}</span>`
+                         : (slot.level ? `<span class="sub">${slot.level}</span>` : "");
+    b.innerHTML = formatTime12(slot.start_time) + sub;
+    if (S.slots.some(x => slotKey(x) === slotKey(slot))) b.classList.add("selected");
+    b.addEventListener("click", () => {
+      const i = S.slots.findIndex(x => slotKey(x) === slotKey(slot));
+      if (i >= 0) { S.slots.splice(i, 1); b.classList.remove("selected"); }
+      else { S.slots.push(slot); b.classList.add("selected"); }
+      $("toStep4").disabled = S.slots.length === 0;
+      renderSelected();
     });
     $("slotGrid").appendChild(b);
   });
+}
+
+function renderSelected() {
+  const el = $("selectedSlots");
+  if (!S.slots.length) { el.innerHTML = ""; return; }
+  const multiLoc = S.locations.length > 1;
+  const sorted = [...S.slots].sort((a, b) =>
+    a.date === b.date ? a.start_time.localeCompare(b.start_time) : a.date.localeCompare(b.date));
+  el.innerHTML = `<div class="sel-label">Your slots · ${S.slots.length} picked</div>` + sorted.map(s => {
+    const [y, m, d] = s.date.split("-").map(Number);
+    const dl = new Date(y, m - 1, d).toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short" });
+    return `<div class="sel-row"><span class="t"><b>${dl}</b> · ${formatTime12(s.start_time)}${multiLoc ? ` · ${s.location_name}` : ""}</span><span class="x" data-k="${slotKey(s)}">×</span></div>`;
+  }).join("");
+  el.querySelectorAll(".x").forEach(x => x.addEventListener("click", () => {
+    const i = S.slots.findIndex(s => slotKey(s) === x.dataset.k);
+    if (i >= 0) S.slots.splice(i, 1);
+    $("toStep4").disabled = S.slots.length === 0;
+    renderSelected();
+    if (S.currentDate) renderDateSlots(S.currentDate);
+  }));
 }
 $("toStep4").addEventListener("click", () => { renderTypes(); goTo(4); });
 
@@ -536,22 +612,8 @@ function renderTypes() {
   $("typeTotal").textContent = "";
   $("typeList").innerHTML = "";
   $("joinBanner").innerHTML = "";
-
-  if (S.slot.session_type) {
-    const t = SESSION_TYPES.find(x => x.id === S.slot.session_type);
-    const left = S.slot.capacity - S.slot.spots_taken;
-    $("typeTitle").textContent = "Join this group";
-    $("typeSub").textContent = "A group is already forming in this slot — grab a spot and split the cost.";
-    $("joinBanner").innerHTML = `<div class="join-banner"><strong>${t.label} · ${S.slot.spots_taken} of ${S.slot.capacity} spots taken.</strong> ${left} spot${left > 1 ? "s" : ""} left — your share is ₹${sharePrice(S.coach.session_price, t.id).toLocaleString("en-IN")}.</div>`;
-    const card = typeCard(t);
-    card.addEventListener("click", () => selectType(t, card));
-    $("typeList").appendChild(card);
-    selectType(t, card);
-    return;
-  }
-
   $("typeTitle").textContent = "Session type";
-  $("typeSub").textContent = "The session price splits across the group — you pay only your share. Remaining spots stay open for others to join.";
+  $("typeSub").textContent = "The session price splits across the group — you pay only your share.";
   SESSION_TYPES.forEach(t => {
     const card = typeCard(t);
     card.addEventListener("click", () => selectType(t, card));
@@ -575,6 +637,17 @@ function validateDetails() {
   };
 }
 
+function slotsText() {
+  const multiLoc = S.locations.length > 1;
+  return [...S.slots]
+    .sort((a, b) => a.date === b.date ? a.start_time.localeCompare(b.start_time) : a.date.localeCompare(b.date))
+    .map(s => {
+      const [y, m, d] = s.date.split("-").map(Number);
+      const dl = new Date(y, m - 1, d).toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short" });
+      return `${dl} ${formatTime12(s.start_time)}${multiLoc ? ` (${s.location_name})` : ""}`;
+    }).join("; ");
+}
+
 $("submitBtn").addEventListener("click", async () => {
   const d = validateDetails();
   if (!d) return;
@@ -582,14 +655,16 @@ $("submitBtn").addEventListener("click", async () => {
   const btn = $("submitBtn");
   btn.disabled = true; btn.classList.add("loading");
   $("submitError").classList.remove("show");
+  const first = S.slots[0] || {};
   try {
     S.booking = await API.createBooking({
-      slot_id: S.slot.id,
       coach_id: S.coach.id, coach_name: S.coach.name,
-      location_id: S.location.id, location_name: S.location.name,
-      date: S.date, start_time: S.slot.start_time, end_time: S.slot.end_time,
-      session_type: S.type.id, players: S.type.players,
-      amount: S.type.price, spots_taken: S.slot.spots_taken,
+      location_id: S.locations.map(l => l.id).join(", "),
+      location_name: S.locations.map(l => l.name).join(", "),
+      locations: S.locations.map(l => l.name).join(", "),
+      date: first.date || "", start_time: first.start_time || "", end_time: first.end_time || "",
+      slots: slotsText(),
+      session_type: S.type.id, players: S.type.players, amount: S.type.price,
       ...S.details,
     });
     renderConfirmation();
@@ -605,11 +680,12 @@ $("submitBtn").addEventListener("click", async () => {
 
 // ── Step 6: confirmation ────────────────────────────────────
 function confirmRows(target) {
+  const slotList = slotsText().split("; ");
+  const slotDisplay = slotList.length <= 2 ? slotList.join("<br>") : `${slotList.slice(0, 2).join("<br>")}<br>+${slotList.length - 2} more`;
   const rows = [
     ["Coach", S.coach.name],
-    ["Location", S.location.name],
-    ["Date", formatDateLong(S.date)],
-    ["Time", `${formatTime12(S.slot.start_time)} – ${formatTime12(S.slot.end_time)}`],
+    ["Courts", S.locations.map(l => l.name).join(", ")],
+    ["Your slots", slotDisplay],
     ["Type", `${S.type.label} · ${S.type.players} player${S.type.players > 1 ? "s" : ""}`],
   ];
   target.innerHTML = rows.map(([k, v]) =>
@@ -623,19 +699,16 @@ function renderConfirmation() {
     $("confirmMsg").insertAdjacentHTML("afterend",
       `<p class="confirm-id">Request ID <strong>${S.booking.booking_id}</strong></p>`);
   }
-  $("bridgeNote").innerHTML = `<div class="bridge-note"><strong>What happens next?</strong> Your coach calls or WhatsApps you on the number you gave. Pricing shown is indicative — you settle it directly with the coach.</div>`;
-
-  const left = (S.booking.capacity || S.type.players) - (S.booking.spots_taken || S.type.players);
-  $("groupNote").innerHTML = left > 0
-    ? `<div class="bridge-note" style="margin-top:12px"><strong>${left} spot${left > 1 ? "s" : ""} still open in your group.</strong> Share this slot — anyone can join and split the cost.</div>`
-    : "";
+  $("bridgeNote").innerHTML = `<div class="bridge-note"><strong>What happens next?</strong> Your coach calls or WhatsApps you on the number you gave and picks one of your slots. Pricing shown is indicative — you settle it directly with the coach.</div>`;
+  $("groupNote").innerHTML = "";
 }
 
 $("newBookingBtn").addEventListener("click", () => {
-  S.coach = null; S.date = null; S.slot = null; S.type = null; S.booking = null;
+  S.coach = null; S.locations = []; S.slots = []; S.type = null; S.booking = null;
   document.querySelectorAll(".step-dot").forEach(d => d.classList.remove("done", "active"));
   const cid = $("confirmMsg").nextElementSibling;
   if (cid && cid.classList.contains("confirm-id")) cid.remove();
+  loadCoaches();
   goTo(1);
 });
 
@@ -664,7 +737,7 @@ $("lookupBtn").addEventListener("click", async () => {
 });
 
 // ── Init ────────────────────────────────────────────────────
-loadLocations();
+loadCoaches();
 </script>
 </body>
 </html>
