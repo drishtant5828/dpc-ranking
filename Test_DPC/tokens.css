@@ -30,6 +30,12 @@
   --surface:#ffffff;
   --card:#ffffff;
 
+  /* ---- Muted text: Dashboard's slate tone everywhere (was warm-black on some pages) ---- */
+  --text-secondary:#64748b;
+  --text-tertiary:#94a3b8;
+  --muted:#94a3b8;      /* legacy alias -> tertiary */
+  --muted2:#64748b;     /* legacy alias -> secondary */
+
   /* ---- Semantic colours: consistent hexes sitewide ---- */
   --success:#4a8c42; --green:#4a8c42;
   --danger:#dc2626;  --red:#dc2626;
@@ -46,3 +52,10 @@
   --ease:cubic-bezier(.4,0,.2,1);
   --dur:220ms;
 }
+
+/* ---- Bottom-nav active state: filled rounded box everywhere (Dashboard style),
+        replacing the per-page underline/colour-only variants. ---- */
+.bnav-tab{border-radius:12px;transition:background var(--dur),color var(--dur);}
+.bnav-tab.active{background:var(--accent-light)!important;color:var(--accent)!important;}
+.bnav-tab.active svg{stroke:var(--accent);}
+.bnav-tab.active::before{display:none!important;}  /* kill calendar underline bar */
