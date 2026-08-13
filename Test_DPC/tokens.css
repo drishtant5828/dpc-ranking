@@ -16,12 +16,13 @@
   --title:var(--font-display);
   --font-heading:var(--font-display);
 
-  /* ---- Brand accent: single source (teal). Change this one line to re-theme. ---- */
-  --accent:#0d9488;
-  --accent-hover:#0b7c72;
-  --accent-light:rgba(13,148,136,.10);
-  --accent-soft:rgba(13,148,136,.10);
-  --accent-glow:rgba(13,148,136,.18);
+  /* ---- Brand accent: single source (near-black, mono/Tracksmith look).
+         Change this one line to re-theme the whole site. ---- */
+  --accent:#15130f;
+  --accent-hover:#000000;
+  --accent-light:rgba(21,19,15,.06);
+  --accent-soft:rgba(21,19,15,.06);
+  --accent-glow:rgba(21,19,15,.16);
   --navy:var(--accent);            /* calendar/coaching legacy alias */
 
   /* ---- Canvas: one off-white across all screens ---- */
@@ -37,7 +38,7 @@
 
   /* ---- Layout rhythm: shared page padding = aligned headings ---- */
   --page-pad-x:20px;
-  --head-pad-top:22px;
+  --head-pad-top:24px;
   --radius:16px;
   --radius-sm:14px;
 
