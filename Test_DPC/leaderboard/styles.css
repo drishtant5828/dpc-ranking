@@ -34,7 +34,11 @@
   --radius-sm: 14px;
 }
 
-/* Mono: all boards use the shared near-black accent (tokens.css). */
+/* Per-board accent identity (overrides the shared near-black for these boards). */
+body[data-page="first-serve"] { --accent: #2e4e8e; --accent-soft: rgba(46,78,142,0.10); --accent-glow: rgba(46,78,142,0.16); }
+body[data-page="break-point"] { --accent: #c8752d; --accent-soft: rgba(200,117,45,0.10); --accent-glow: rgba(200,117,45,0.16); }
+body[data-page="noida"]       { --accent: #1a7d5a; --accent-soft: rgba(26,125,90,0.10); --accent-glow: rgba(26,125,90,0.16); }
+body[data-page="match-point"] { --accent: #7a3b57; --accent-soft: rgba(122,59,87,0.12); --accent-glow: rgba(122,59,87,0.16); }
 
 * { box-sizing: border-box; }
 
