@@ -230,7 +230,7 @@ async function loadGirlsPage(isManualRefresh) {
     const fromBreakPoint = normalizeOverallRankings((data.breakPointOverall || []).filter(isGirl));
     const rankings = rankGirls([...fromFirstServe, ...fromBreakPoint]);
     if (!rankings.length) throw new Error("No girls ranking entries were found.");
-    renderOverallTable(elements.rankingBody, rankings, 4);
+    renderOverallTable(elements.rankingBody, rankings, 4, 0); // Girls: no min-matches gate
     updateStatus("");
   } catch (error) {
     console.error("Failed to load Girls rankings:", error);
@@ -775,10 +775,11 @@ function renderTournamentTable(target, rankings, colspan, emptyMessage = "No tou
   }).join("");
 }
 
-function renderOverallTable(target, rankings, colspan) {
+function renderOverallTable(target, rankings, colspan, minMatches = MIN_MATCHES) {
   if (!target) return;
   ensureSearchUi(target);
-  rankings = qualifyByMatches(rankings); // ranking only counts players with >=2 matches
+  rankings = qualifyByMatches(rankings, minMatches); // default: only players with >=2 matches
+
   if (!rankings.length) { renderMessageRow(target, "No overall entries yet.", colspan); return; }
   const viewer = getViewerName();
   const listRankings = enhancePanel(target, rankings, {
