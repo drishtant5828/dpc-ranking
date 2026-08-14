@@ -25,6 +25,11 @@ const PAGE_CONFIG = {
     selectorValue: "noida.html",
     refreshText: "Refresh",
     loader: loadNoidaPage
+  },
+  "girls": {
+    selectorValue: "girls.html",
+    refreshText: "Refresh",
+    loader: loadGirlsPage
   }
 };
 
@@ -212,6 +217,51 @@ async function loadNoidaPage(isManualRefresh) {
   } finally {
     setLoadingState(false);
   }
+}
+
+// Girls board: girls-only ranking pulled from First Serve + Break Point,
+// filtered by the sheet's "Girls" (true/false) column, deduped, re-ranked.
+async function loadGirlsPage(isManualRefresh) {
+  setLoadingState(true);
+  updateStatus(isManualRefresh ? "Refreshing leaderboard..." : "");
+  try {
+    const data = await getAllRankingsData(isManualRefresh);
+    const fromFirstServe = normalizeFlexibleOverallRankings((data.firstServeRanking || []).filter(isGirl));
+    const fromBreakPoint = normalizeOverallRankings((data.breakPointOverall || []).filter(isGirl));
+    const rankings = rankGirls([...fromFirstServe, ...fromBreakPoint]);
+    if (!rankings.length) throw new Error("No girls ranking entries were found.");
+    renderOverallTable(elements.rankingBody, rankings, 4);
+    updateStatus("");
+  } catch (error) {
+    console.error("Failed to load Girls rankings:", error);
+    renderMessageRow(elements.rankingBody, "Leaderboard data is not available right now.", 4);
+    updateStatus("Could not load the live leaderboard right now.", true);
+  } finally {
+    setLoadingState(false);
+  }
+}
+
+// "Girls" column is a boolean-ish flag; accept true/yes/1/y in any case.
+function isGirl(row) {
+  const v = row.Girls ?? row.girls ?? row.GIRLS ?? row.Girl ?? row.girl;
+  const s = String(v).trim().toLowerCase();
+  return s === "true" || s === "yes" || s === "1" || s === "y";
+}
+
+// Merge girls from both groups, dedupe by name (keep the stronger entry),
+// then re-rank by rating with score as tiebreak.
+function rankGirls(list) {
+  const byName = new Map();
+  for (const p of list) {
+    const key = p.name.toLowerCase();
+    const prev = byName.get(key);
+    if (!prev || p.rating > prev.rating || (p.rating === prev.rating && p.score > prev.score)) {
+      byName.set(key, p);
+    }
+  }
+  return [...byName.values()]
+    .sort((a, b) => (b.rating - a.rating) || (b.score - a.score) || a.name.localeCompare(b.name))
+    .map((p, i) => ({ ...p, rank: i + 1 }));
 }
 
 // ─── DATA FETCHING ───────────────────────────────────────────────────────────
