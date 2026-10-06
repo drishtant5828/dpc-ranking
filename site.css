@@ -1,0 +1,144 @@
+/* ============================================================
+   DPC site skin — the home page's look (B) on every player page.
+   Loaded LAST (after tokens.css), so it wins over each page's own CSS.
+   One background, one ink colour, one accent; Berling headings, Inter text;
+   ink pill buttons, ink filter chips, flat white cards with hairlines.
+   ============================================================ */
+:root{
+  --ink:#14161b;
+  --line:rgba(20,22,27,.10);
+  --line-strong:rgba(20,22,27,.18);
+  --wrap:1080px;
+  --text:var(--ink);
+  --border:var(--line);
+  --shadow:none;
+}
+html body{background:var(--bg)!important;color:var(--ink)}
+
+/* ── Top bar (same as home) ── */
+.top{position:sticky;top:0;z-index:250;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:saturate(1.2) blur(10px);-webkit-backdrop-filter:saturate(1.2) blur(10px);border-bottom:1px solid var(--line)}
+.top .wrap{max-width:var(--wrap);margin:0 auto;padding:0 var(--page-pad-x);display:flex;align-items:center;justify-content:space-between;height:56px}
+.wordmark{font-family:var(--font-display);font-weight:700;font-size:17px;color:var(--ink);text-decoration:none}
+.wordmark b{color:var(--accent);font-weight:700}
+.top-links{display:flex;gap:22px;align-items:center;font-size:14px}
+.top-links a{color:var(--ink);text-decoration:none}
+.top-links a[aria-current="page"]{color:var(--accent)}
+.top-links .desk{display:none}
+@media(min-width:860px){.top-links .desk{display:inline}}
+
+/* Pages that had their own brand bars (login, application, explainer) — same look as .top */
+#navbar,body>nav,.page-explainer .topbar{position:sticky!important;top:0;z-index:250;height:56px!important;padding:0 var(--page-pad-x)!important;display:flex!important;align-items:center;justify-content:space-between;background:color-mix(in srgb,var(--bg) 92%,transparent)!important;backdrop-filter:saturate(1.2) blur(10px);-webkit-backdrop-filter:saturate(1.2) blur(10px);border-bottom:1px solid var(--line)!important;box-shadow:none!important;color:var(--ink)!important}
+#navbar .nav-logo,body>nav .nav-logo,.page-explainer .topbar .brand-logo{font-family:var(--font-display)!important;font-weight:700!important;font-size:17px!important;letter-spacing:0!important;color:var(--ink)!important;text-transform:none!important}
+#navbar .nav-back,body>nav .nav-back,.page-explainer .topbar .back-link{font-size:14px!important;letter-spacing:0!important;text-transform:none!important;color:var(--accent)!important;font-weight:400!important}
+
+/* ── Desktop: top bar instead of the dark sidebar, everywhere ── */
+@media(min-width:769px){
+  .left-sidebar,.dash-sidebar{display:none!important}
+  html body{padding-left:0!important}
+  .shell,.leaderboard-card{padding-left:0!important}
+}
+@media(min-width:860px){
+  .bottom-nav{display:none!important}
+  html body{padding-bottom:24px!important}
+}
+
+/* ── Headings ── */
+h1,h2,.panel-title,.section-title,.c-title,.hero-title,.form-title,.q-title,.top-name,.dash-name{font-family:var(--font-display)!important;color:var(--ink)}
+
+/* ── Buttons: primary = ink pill, secondary = hairline pill, sentence case ── */
+.btn-join,.btn-go,.submit-btn,.btn-accent,.sc-primary,.cremove,.logout-btn,.signout-btn{
+  background:var(--ink)!important;color:#fff!important;border:1px solid var(--ink)!important;border-radius:999px!important;
+  text-transform:none!important;letter-spacing:0!important;font-family:var(--font-body)!important;font-weight:500!important;font-size:14px!important;
+  min-height:44px;box-shadow:none!important;background-image:none!important}
+.btn-join:hover,.btn-go:hover,.submit-btn:hover,.btn-accent:hover,.sc-primary:hover{background:#2a2d34!important}
+.btn-waitlist,.btn-cx,.btn-ghost,.sc-secondary,.ckeep,.my-sessions-btn,.top-btn,.refresh-button{
+  background:transparent!important;color:var(--ink)!important;border:1px solid var(--line-strong)!important;border-radius:999px!important;
+  text-transform:none!important;letter-spacing:0!important;font-weight:500!important;box-shadow:none!important}
+.action-btn{text-transform:none!important;letter-spacing:0!important;border-radius:999px!important;font-weight:500!important;font-size:14px!important;box-shadow:none!important}
+
+/* ── Filter chips / tabs: hairline, active = ink ── */
+.fb,.filter-pill,.chart-tab,.tab-button,.mode-btn,.tab-btn{
+  background:transparent!important;color:var(--ink)!important;border:1px solid var(--line-strong)!important;border-radius:999px!important;
+  text-transform:none!important;letter-spacing:0!important;font-weight:500!important;font-size:13px!important;min-height:36px;box-shadow:none!important}
+.fb.active,.filter-pill.active,.chart-tab.active,.tab-button.is-active,.mode-btn.active,.tab-btn.active{
+  background:var(--ink)!important;color:#fff!important;border-color:var(--ink)!important}
+.tab-row{border-bottom:0!important;gap:8px}
+.tab-btn{padding:0 16px!important}
+.tab-btn::after{display:none!important}
+.chart-tabs{background:transparent!important;gap:6px;padding:0!important}
+
+/* ── Cards: white, hairline, no shadow ── */
+.event-card,.q-stat,.chart-card,.review-card,.panel .coach-card,.session-item,.rating-card,.dash-stat,.opt-btn{
+  background:var(--surface)!important;border:1px solid var(--line)!important;border-radius:var(--radius)!important;box-shadow:none!important}
+.event-card:hover,.q-stat.clickable:hover{border-color:var(--line-strong)!important;transform:none!important}
+.event-card .date-col{border-right:1px solid var(--line)!important;background:transparent!important}
+.event-card .c-title{font-size:20px!important;line-height:1.15}
+.event-card .card-bottom,.event-card .c-right{border-color:var(--line)!important}
+
+/* Tags: small sentence-case pills */
+.tag,.cost-chip,.badge,.band-tag,.adv-badge{text-transform:none!important;letter-spacing:0!important;font-weight:500!important;font-size:11px!important;border-radius:999px!important;box-shadow:none!important}
+.tag-game,.tag-level{background:transparent!important;border:1px solid var(--line-strong)!important;color:var(--text-secondary)!important}
+.cost-chip{background:var(--accent-soft)!important;color:var(--accent)!important;border:0!important}
+
+/* Slot meters use the accent */
+.sfill{background:var(--accent)!important}
+.sbar{background:var(--line)!important}
+
+/* ── Inputs ── */
+.field-input,.input-field,.fg input,.fg select,.field input,.field select,.field textarea,input[type="search"]{
+  background:var(--surface)!important;border:1px solid var(--line-strong)!important;border-radius:12px!important;min-height:48px;box-shadow:none!important;color:var(--ink)!important;font-size:16px!important}
+.field-input:focus,.input-field:focus,.fg input:focus,.field input:focus{border-color:var(--accent)!important;outline:none;box-shadow:0 0 0 3px var(--accent-soft)!important}
+.field-label,.q-label,.form-eyebrow,.hero-eyebrow,.section-kicker,.kicker,.left-eyebrow,.dash-eyebrow{letter-spacing:.14em!important;font-size:11px!important;color:var(--text-secondary)!important;font-weight:500!important}
+
+/* ── Leaderboard: rows with hairlines, neutral avatars ── */
+.table-wrap{background:transparent!important;border:0!important;box-shadow:none!important}
+.table-wrap table{border-collapse:collapse}
+.table-wrap tbody tr{background:transparent!important;box-shadow:none!important;border:0!important;border-bottom:1px solid var(--line)!important;border-radius:0!important}
+.table-wrap tbody td{background:transparent!important;border:0!important;box-shadow:none!important}
+.table-wrap th{text-transform:none!important;letter-spacing:0!important;font-size:12px!important;color:var(--text-secondary)!important;font-weight:500!important;border-bottom:1px solid var(--line)!important}
+.rank-text,.points-cell,.stat-cell:last-child{font-family:var(--font-display)!important}
+.avatar,.podium-avatar,.top-avatar{background:#e6e8ee!important;color:var(--ink)!important;box-shadow:none!important}
+.podium-block{background:var(--surface)!important;border:1px solid var(--line)!important;box-shadow:none!important}
+.page-switcher select,.page-switcher{border-radius:999px!important;border:1px solid var(--line-strong)!important;background:var(--surface)!important;box-shadow:none!important}
+
+/* ── Dashboard: the rating ring becomes the home page's dark rating card ── */
+.hero-score{background:var(--ink)!important;color:#f7f6f2;border-radius:20px!important;border:0!important;margin:4px var(--page-pad-x) 14px;padding:22px 20px!important}
+.hero-score .score-ring-bg{stroke:rgba(255,255,255,.14)!important}
+.hero-score .score-ring-fill{stroke:#f7f6f2!important}
+.hero-score .score-label,.hero-score .score-max{color:#a9adb6!important}
+.hero-score .score-value{color:#f7f6f2!important}
+.q-stat-icon{background:var(--accent-soft)!important;color:var(--accent)!important}
+@media(min-width:900px){.hero-score{margin:0!important}}
+
+/* ── Bottom nav: identical on every page ── */
+.bottom-nav{background:var(--bg)!important;background-image:none!important;border-top:1px solid var(--line)!important;box-shadow:none!important}
+.bnav-tab{color:var(--text-tertiary)!important;min-height:48px;justify-content:center}
+.bnav-tab.active{background:var(--accent-soft)!important;color:var(--accent)!important}
+
+/* ── Explainer: no black bar, same ink as everywhere ── */
+.page-explainer .topbar *{color:inherit}
+
+/* ── Games page: its own header + sticky filter bar ── */
+header.top{display:block!important;height:auto!important;padding:0!important;position:sticky!important;top:0!important;background:color-mix(in srgb,var(--bg) 92%,transparent)!important}
+body > header:not(.top):not(.topbar){display:none!important}   /* the old per-page brand headers */
+.filter-bar{top:56px!important;background:var(--bg)!important}
+
+/* Explainer: its logo was drawn white for the old black bar */
+.page-explainer .topbar .brand-logo{filter:none!important;height:20px!important}
+.page-explainer .topbar .back-link{display:flex!important}
+.page-explainer .topbar .back-link::before{content:'←'}
+/* One body font sitewide */
+.page-explainer{font-family:var(--font-body)!important}
+/* Dashboard match-type badges: one accent, no purple */
+.match-type-badge{text-transform:none!important;letter-spacing:0!important;border-radius:999px!important}
+.match-type-badge.tm{background:var(--accent-soft)!important;color:var(--accent)!important}
+#navbar .wordmark b,body>nav .wordmark b{color:var(--accent)}
+
+/* ── Desktop: content centred under the top bar, like home ── */
+@media(min-width:769px){
+  .events-wrap,.filter-bar,.hero,.page-wrap,.leaderboard-card,.shell .container{margin-left:auto!important;margin-right:auto!important;max-width:var(--wrap)!important}
+  .filter-bar,.hero{padding-left:var(--page-pad-x)!important;padding-right:var(--page-pad-x)!important}
+}
+@media(min-width:900px){
+  .app{margin:0 auto!important}
+}

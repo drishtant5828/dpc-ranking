@@ -83,7 +83,7 @@
   }
   .left-bg-img {
     position: absolute; inset: 0;
-    background-image: url('fallback.jpeg');
+    background-image: url('../fallback.jpeg');
     background-size: cover;
     background-position: center;
     z-index: 0;
@@ -374,8 +374,9 @@
   }
 </style>
 <link rel="stylesheet" href="../tokens.css?v=3">
+<link rel="stylesheet" href="../site.css?v=2">
 </head>
-<body>
+<body class="page-login">
 
 <!-- SVG LOGO SYMBOL (same as main site) -->
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
@@ -387,9 +388,7 @@
 
 <!-- NAV -->
 <nav id="navbar">
-  <a class="nav-logo" href="../">
-    <svg xmlns="http://www.w3.org/2000/svg"><use href="#dpc-logo"/></svg>
-  </a>
+  <a class="nav-logo wordmark" href="../" aria-label="Delhi Padel Collective, home">Delhi<b>//</b>PadelCollective</a>
   <a class="nav-back" href="../">
     <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
       <path d="M10 3L5 8l5 5"/>
