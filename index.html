@@ -49,7 +49,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 @media(min-width:860px){.top-links .desk{display:inline}}
 
 /* hero (visitor) */
-.hero{position:relative;min-height:min(78svh,680px);display:flex;align-items:flex-end;color:#f7f6f2;overflow:hidden;background:#1d2738}
+.hero{position:relative;min-height:min(64svh,560px);display:flex;align-items:flex-end;color:#f7f6f2;overflow:hidden;background:#1d2738}
 .hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .hero::after{content:"";position:absolute;inset:0;background:rgba(14,18,28,.55)}
 .hero .wrap{position:relative;z-index:1;padding-top:64px;padding-bottom:44px;width:100%}
@@ -60,10 +60,10 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .hero-ctas .link{color:#f7f6f2}
 
 /* sections */
-section{padding:44px 0 8px}
+section{padding:28px 0 4px}
 .sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-bottom:6px}
 .sec-head h2{font-family:var(--font-display);font-weight:700;font-size:26px;letter-spacing:-.01em}
-.lead{font-family:var(--font-display);font-weight:700;font-size:clamp(28px,6vw,40px);line-height:1.1;letter-spacing:-.01em;max-width:18ch;margin:8px 0 18px}
+.lead{font-family:var(--font-display);font-weight:700;font-size:clamp(26px,5vw,36px);line-height:1.1;letter-spacing:-.01em;max-width:20ch;margin:6px 0 14px}
 .rows{list-style:none}
 .rows li{border-top:1px solid var(--line)}
 .rows li:last-child{border-bottom:1px solid var(--line)}
@@ -101,8 +101,8 @@ section{padding:44px 0 8px}
 .stats .serif{font-size:28px;display:block}
 .stats span:last-child{font-size:12px;color:var(--text-secondary)}
 
-.join{background:var(--accent);color:#f7f6f2;margin-top:48px}
-.join .wrap{padding-top:44px;padding-bottom:44px}
+.join{background:var(--accent);color:#f7f6f2;margin-top:32px}
+.join .wrap{padding-top:32px;padding-bottom:32px}
 .join .label{color:#bfcbe3}
 .join p{color:#dbe2f0;max-width:40ch;margin-bottom:22px}
 
@@ -135,10 +135,48 @@ footer nav a{min-height:32px;display:inline-flex;align-items:center}
 .btn-join{min-height:40px;padding:0 16px;font-size:14px;border:1px solid var(--ink);border-radius:999px;display:inline-flex;align-items:center;white-space:nowrap}
 .btn-join.ghost{border-color:var(--line-strong);color:var(--text-secondary)}
 @media(min-width:860px){
-  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:48px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:40px}
   .hero .wrap{padding-bottom:72px}
 }
 [hidden]{display:none!important}
+.hello{padding:20px 0 12px;display:block}
+.rows .row.me{padding-left:12px;padding-right:12px}
+.hello h1{font-size:28px;margin-top:2px}
+.quick{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.quick a{background:var(--surface);border:1px solid var(--line);border-radius:14px;min-height:72px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-size:12px;font-weight:500;text-align:center;padding:8px 4px;transition:border-color var(--dur) var(--ease)}
+.quick a:hover{border-color:var(--line-strong)}
+.quick svg{width:22px;height:22px;stroke:var(--accent);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tight{padding:22px 0 0}
+.band{margin-top:4px}
+.band-bar{height:4px;border-radius:4px;background:rgba(255,255,255,.14);overflow:hidden;margin-bottom:8px}
+.band-bar i{display:block;height:100%;width:0;background:#f7f6f2;border-radius:4px;transition:width .6s var(--ease)}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid rgba(255,255,255,.12);margin-top:14px;padding-top:12px}
+.kpis div{padding-right:6px}
+.kpis b{display:block;font-family:var(--font-display);font-weight:700;font-size:22px;line-height:1.1}
+.kpis span{font-size:11px;color:#a9adb6;line-height:1.3;display:block}
+.hscroll{display:grid;grid-auto-flow:column;grid-auto-columns:78%;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 8px;margin:0 calc(-1 * var(--page-pad-x));padding-left:var(--page-pad-x);padding-right:var(--page-pad-x);scrollbar-width:none}
+.hscroll::-webkit-scrollbar{display:none}
+.gcard{scroll-snap-align:start;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px;display:flex;flex-direction:column;gap:6px;min-height:150px}
+.gcard .when{font-size:12px;font-weight:500;color:var(--accent);text-transform:uppercase;letter-spacing:.06em}
+.gcard .t{font-family:var(--font-display);font-weight:700;font-size:18px;line-height:1.15}
+.gcard .meter{height:4px;border-radius:4px;background:var(--line);overflow:hidden;margin-top:auto}
+.gcard .meter i{display:block;height:100%;background:var(--accent)}
+.gcard .foot{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--text-secondary)}
+.rows.compact .row{min-height:52px;padding:10px 0}
+.day{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-secondary);padding:14px 0 6px}
+.res{font-family:var(--font-display);font-weight:700;font-size:16px;white-space:nowrap}
+.res.w{color:#3d7536}.res.l{color:var(--text-secondary)}
+.explore{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.explore a{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;min-height:84px;display:flex;flex-direction:column;justify-content:space-between}
+.explore b{font-family:var(--font-display);font-weight:700;font-size:16px}
+.explore span{font-size:12px;color:var(--text-secondary)}
+.paylink{font-size:13px;font-weight:500;color:#fff;background:var(--accent);border-radius:999px;padding:8px 14px;white-space:nowrap}
+@media(min-width:860px){
+  .mgrid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:36px;align-items:start}
+  .mside{position:sticky;top:72px}
+  .hscroll{grid-auto-flow:row;grid-template-columns:1fr 1fr;grid-auto-columns:auto;overflow:visible;margin:0;padding:4px 0 8px}
+  .quick{grid-template-columns:repeat(4,minmax(0,160px))}
+}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
 /* bottom nav: same tabs and markup as every other page */
@@ -256,39 +294,69 @@ footer nav a{min-height:32px;display:inline-flex;align-items:center}
 <!-- ============ B · MEMBERS ============ -->
 <main id="member" hidden>
   <div class="wrap">
-    <div class="hello"><h1 id="hello">Hi</h1></div>
+    <div class="hello"><span class="label" id="today"></span><h1 id="hello">Hi</h1></div>
 
-    <div class="grid2">
-      <div>
+    <nav class="quick" aria-label="Quick actions">
+      <a href="calender/"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>Book a game</a>
+      <a href="Dashboard/"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="14 7 21 7 21 14"/></svg>My stats</a>
+      <a href="leaderboard/"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="18" y="3" width="3" height="18"/><rect x="11" y="8" width="3" height="13"/><rect x="4" y="13" width="3" height="8"/></svg>Rankings</a>
+      <a href="coaching/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 6.9H22l-5.8 4.3 2.2 6.8L12 16l-6.4 4 2.2-6.8L2 8.9h7.6z"/></svg>Coaching</a>
+    </nav>
+
+    <div class="mgrid">
+      <div class="mmain">
         <a class="rcard" href="Dashboard/" aria-label="Your rating, open your stats">
-          <span class="label" id="rLabel">Your rating</span>
-          <div class="meta"><span class="big" id="rValue">—</span><span class="pos" id="rPos"></span><span class="delta" id="rDelta"></span></div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><span class="label" id="rLabel">Your rating</span><span class="delta" id="rDelta"></span></div>
+          <div class="meta"><span class="big" id="rValue">—</span><span class="pos" id="rPos"></span></div>
           <svg id="rSpark" viewBox="0 0 300 46" preserveAspectRatio="none" aria-hidden="true"></svg>
-          <div class="foot" id="rFoot"></div>
+          <div class="band"><div class="band-bar"><i id="rBar"></i></div><div class="foot" id="rFoot"></div></div>
+          <div class="kpis">
+            <div><b id="kMatches">—</b><span>matches</span></div>
+            <div><b id="kTop3">—</b><span>top-3 finishes</span></div>
+            <div><b id="kRecord">—</b><span>tournament W–L</span></div>
+            <div><b id="kMove">—</b><span id="kMoveL">places climbed</span></div>
+          </div>
         </a>
 
-        <section aria-labelledby="nextH" style="padding-top:28px">
-          <span class="label" id="nextH">Your next game</span>
-          <div id="next" style="margin-top:10px"><div class="skeleton" style="border:0;border-radius:var(--radius)"></div></div>
+        <section class="tight" aria-labelledby="nextH">
+          <div class="sec-head"><h2 id="nextH">Your next game</h2></div>
+          <div id="next"><div class="skeleton" style="border:0;border-radius:var(--radius)"></div></div>
         </section>
-      </div>
 
-      <div>
-        <section aria-labelledby="levelH" style="padding-top:10px">
+        <section class="tight" aria-labelledby="levelH">
           <div class="sec-head"><h2 id="levelH">At your level</h2><a class="link" href="calender/">All games</a></div>
-          <ul class="rows" data-games-level><li class="skeleton"></li><li class="skeleton"></li></ul>
+          <div class="hscroll" data-games-level><div class="gcard skeleton"></div><div class="gcard skeleton"></div></div>
         </section>
 
-        <section aria-labelledby="nearH">
-          <div class="sec-head"><h2 id="nearH">On the board</h2><a class="link" href="leaderboard/">Full rankings</a></div>
-          <ul class="rows" id="near"><li class="skeleton"></li><li class="skeleton"></li></ul>
-        </section>
-
-        <section aria-labelledby="lastH">
-          <span class="label" id="lastH">Your last match</span>
-          <div id="last" style="margin-top:10px"></div>
+        <section class="tight" aria-labelledby="schedH">
+          <div class="sec-head"><h2 id="schedH">Coming up at DPC</h2><a class="link" href="calender/">Calendar</a></div>
+          <div id="sched"><div class="skeleton"></div><div class="skeleton"></div></div>
         </section>
       </div>
+
+      <aside class="mside">
+        <section class="tight" aria-labelledby="nearH">
+          <div class="sec-head"><h2 id="nearH">The board</h2><a class="link" href="leaderboard/">Full rankings</a></div>
+          <div class="chips" role="group" aria-label="Board view">
+            <button class="chip" data-near="around" aria-pressed="true">Around you</button>
+            <button class="chip" data-near="top" aria-pressed="false">Top 10</button>
+          </div>
+          <ul class="rows compact" id="near"><li class="skeleton"></li><li class="skeleton"></li></ul>
+        </section>
+
+        <section class="tight" aria-labelledby="recentH">
+          <div class="sec-head"><h2 id="recentH">Recent matches</h2><a class="link" href="Dashboard/">All</a></div>
+          <ul class="rows compact" id="recent"></ul>
+        </section>
+
+        <section class="tight" aria-labelledby="exploreH">
+          <div class="sec-head"><h2 id="exploreH">More</h2></div>
+          <div class="explore">
+            <a href="leaderboard/explainer.html"><b>How rating works</b><span>The 0–7 scale, explained</span></a>
+            <a id="invite" href="#" target="_blank" rel="noopener"><b>Invite a friend</b><span>Share on WhatsApp</span></a>
+          </div>
+        </section>
+      </aside>
     </div>
   </div>
 </main>
@@ -427,62 +495,104 @@ function spark(vals) {
   return `<polyline points="${pts}" fill="none" stroke="#f7f6f2" stroke-width="1.6" vector-effect="non-scaling-stroke"/>`;
 }
 
+const ordinal = n => n + (["th", "st", "nd", "rd"][((n % 100) - 20) % 10] || ["th", "st", "nd", "rd"][n % 100] || "th");
+const mDate = m => Date.parse(m.date) || 0;
+function firstLast(str) { const a = String(str || "").split(";").map(x => Number(x.split(",")[1])).filter(n => !isNaN(n) && n > 0); return a.length ? [a[0], a[a.length - 1]] : null; }
+
 function renderMember(player, matches, phone) {
   $("visitor").hidden = true;
   $("member").hidden = false;
   const raw = String(player.name || "").trim().split(/\s+/)[0] || "there";
   const first = raw.charAt(0).toUpperCase() + raw.slice(1);
-  $("hello").textContent = `Hi, ${first}`;
+  const hr = new Date().getHours();
+  $("hello").textContent = `${hr < 12 ? "Good morning" : hr < 17 ? "Good afternoon" : "Good evening"}, ${first}`;
+  $("today").textContent = new Date().toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long" });
   $("topAccount").textContent = "Your stats"; $("topAccount").href = "Dashboard/";
+  $("invite").href = "https://wa.me/?text=" + encodeURIComponent("Come play padel with me at Delhi Padel Collective: https://www.padelcollectiveindia.com/Application/");
 
-  const rating = Number(player.rating);
-  const hasRating = player.rating != null && player.rating !== "" && !isNaN(rating);
-  if (hasRating) {
+  // ── stats from your matches ──
+  const ms = [...(matches || [])].sort((a, b) => mDate(b) - mDate(a));
+  const amer = ms.filter(m => m.rank !== undefined), tour = ms.filter(m => m.result !== undefined);
+  const top3 = amer.filter(m => Number(m.rank) >= 1 && Number(m.rank) <= 3).length;
+  const wins = tour.filter(m => /^w/i.test(m.result)).length, losses = tour.filter(m => /^l/i.test(m.result)).length;
+  $("kMatches").textContent = ms.length;   // same count as the Dashboard
+  $("kTop3").textContent = amer.length ? top3 : "—";
+  $("kRecord").textContent = tour.length ? `${wins}–${losses}` : "—";
+  const rk = firstLast(player.rankingHistory);
+
+  const paint = (rating, ranking) => {
+    const has = rating != null && rating !== "" && !isNaN(Number(rating));
+    if (!has) { $("rFoot").textContent = "Play two matches to get your rating."; return; }
+    rating = Number(rating);
     const b = band(rating);
     $("rLabel").textContent = `Your rating · ${player.venue || b.name}`;
     $("rValue").textContent = rating.toFixed(2);
-    $("rPos").textContent = player.ranking ? `#${player.ranking}` : "Not ranked yet";
+    $("rPos").textContent = ranking ? `#${ranking} on the board` : "Not ranked yet";
     const h = history(player.ratingHistory);
     $("rSpark").innerHTML = spark(h);
-    if (h.length >= 2) { const d = h[h.length - 1] - h[h.length - 2]; if (Math.abs(d) >= 0.005) { $("rDelta").textContent = (d > 0 ? "+" : "") + d.toFixed(2); $("rDelta").className = "delta " + (d > 0 ? "up" : "down"); } }
+    if (h.length >= 2) { const d = rating - h[0]; if (Math.abs(d) >= 0.005) { $("rDelta").textContent = `${d > 0 ? "+" : ""}${d.toFixed(2)} since you started`; $("rDelta").className = "delta " + (d > 0 ? "up" : "down"); } }
+    const lo = BANDS.filter(x => x[0] <= rating).pop()[0], hi = b.next ? b.next[0] : 7;
+    $("rBar").style.width = Math.max(4, Math.min(100, (rating - lo) / (hi - lo) * 100)) + "%";
     $("rFoot").textContent = b.next ? `${b.name} · ${(b.next[0] - rating).toFixed(2)} to ${b.next[1]}` : b.name;
-  } else {
-    $("rFoot").textContent = "Play two matches to get your rating.";
-  }
+    if (rk && ranking) { const moved = rk[0] - Number(ranking); $("kMove").textContent = moved > 0 ? moved : moved === 0 ? "0" : Math.abs(moved); $("kMoveL").textContent = moved >= 0 ? "places climbed" : "places dropped"; }
+    return rating;
+  };
+  let rating = paint(player.rating, player.ranking);
 
-  // Latest match by date ("2 Sep 2026"); the list isn't in date order.
-  const last = [...(matches || [])].sort((x, y) => (Date.parse(y.date) || 0) - (Date.parse(x.date) || 0))[0];
-  $("last").innerHTML = last ? `<div class="card"><div class="row" style="padding:0;min-height:0"><div><div class="row-title">${esc(last.matchType || "Match")} · ${esc(last.venue || "")}</div><div class="row-sub">${esc(last.date || "")}</div></div><span class="rating">${last.rank != null && last.rank !== "" ? "#" + esc(last.rank) : esc(last.result || last.score || "")}</span></div></div>`
-    : `<div class="empty">No matches yet. Your first one shows up here.</div>`;
+  // ── recent matches ──
+  $("recent").innerHTML = ms.length ? ms.slice(0, 4).map(m => {
+    if (m.rank !== undefined) {
+      const n = (m.opponents || []).length + 1, r = Number(m.rank);
+      return `<li><div class="row"><div><div class="row-title">Americano · ${esc(m.venue)}</div><div class="row-sub">${esc(m.date)}${m.total ? " · " + esc(m.total) + " pts" : ""}</div></div><span class="res">${r ? ordinal(r) + (n > 1 ? `<span class="row-sub" style="font-family:var(--font-body);font-weight:400"> of ${n}</span>` : "") : esc(m.rank)}</span></div></li>`;
+    }
+    const w = /^w/i.test(m.result);
+    return `<li><div class="row"><div><div class="row-title">Tournament · with ${esc(m.partner || "partner")}</div><div class="row-sub">${esc(m.date)} · vs ${esc(m.opp1 || "")}${m.opp2 ? " & " + esc(m.opp2) : ""}</div></div><span class="res ${w ? "w" : "l"}">${w ? "W" : "L"} ${esc(m.score || "")}</span></div></li>`;
+  }).join("") : `<li class="empty">No matches yet. Your first one shows up here.</li>`;
 
+  // ── games ──
   gamesP.then(g => {
-    // Your games: server RSVPs carry only the phone's last 4 digits; match those plus your first name.
-    const p4 = String(phone).replace(/\D/g, "").slice(-4), fn = first.toLowerCase();
+    const p4 = String(phone).replace(/\D/g, "").slice(-4), fn = raw.toLowerCase();
     const isMine = (r, e) => String(r.eventId) === String(e.id) && r.ph4 === p4 && String(r.name).toLowerCase().startsWith(fn);
     const mine = g.upcoming.filter(e => g.rsvps.some(r => isMine(r, e)));
-    const nx = mine[0];
-    if (nx) {
-      const r = g.rsvps.find(r => isMine(r, nx));
-      const paid = /^(yes|true|paid)$/i.test(String(r?.paid || ""));
-      const status = r?.status === "waitlist" ? `<span class="pill">Waitlist</span>` : paid ? `<span class="pill ok">Paid</span>` : `<span class="pill">Confirmed</span>`;
-      $("next").innerHTML = `<a class="card row" style="padding:16px" href="calender/"><div><div class="row-title">${esc(shortTitle(nx))}</div><div class="row-sub">${esc(whenLabel(nx))} · ${esc(nx.location)}</div></div>${status}</a>`;
+    if (mine.length) {
+      $("next").innerHTML = mine.slice(0, 2).map(nx => {
+        const r = g.rsvps.find(r => isMine(r, nx));
+        const paid = /^(yes|true|paid)$/i.test(String(r?.paid || ""));
+        const right = r?.status === "waitlist" ? `<span class="pill">Waitlist</span>`
+          : paid ? `<span class="pill ok">Paid</span>`
+          : nx.link1 ? `<a class="paylink" href="${esc(nx.link1)}" target="_blank" rel="noopener">Pay ₹${esc(nx.cost)}</a>` : `<span class="pill">Confirmed</span>`;
+        return `<div class="card row" style="padding:14px 16px;margin-bottom:8px"><a href="calender/"><div class="row-title">${esc(shortTitle(nx))}</div><div class="row-sub">${esc(whenLabel(nx))} · ${esc(nx.location)}</div></a>${right}</div>`;
+      }).join("");
     } else {
-      $("next").innerHTML = `<div class="card row" style="padding:16px"><div class="row-sub">No game booked yet.</div><a class="link" style="min-height:0" href="calender/">Find one</a></div>`;
+      $("next").innerHTML = `<div class="card row" style="padding:14px 16px"><div><div class="row-title">No game booked</div><div class="row-sub">Grab a spot below, or see the full calendar.</div></div><a class="link" style="min-height:0" href="calender/">Calendar</a></div>`;
     }
-    const near = g.upcoming.filter(e => !mine.includes(e)).filter(e => {
-      const f = floorOf(e); return !hasRating || f == null || (f <= rating + 0.05 && f >= rating - 1.2);
-    }).slice(0, 4);
-    document.querySelector("[data-games-level]").innerHTML = near.length
-      ? near.map(e => gameRow(e, g.taken(e.id), left => left ? `<span class="btn-join">Join</span>` : `<span class="btn-join ghost">Waitlist</span>`)).join("")
-      : `<li class="empty">Nothing at your level this week. <a class="link" style="min-height:0" href="calender/">See all games</a></li>`;
-  }).catch(e => { window.DPC?.report("Home: member games", e); $("next").innerHTML = ""; failed(document.querySelector("[data-games-level]"), "games"); });
+    const lvl = g.upcoming.filter(e => !mine.includes(e)).filter(e => { const f = floorOf(e); return rating == null || f == null || (f <= rating + 0.05 && f >= rating - 1.2); }).slice(0, 4);
+    document.querySelector("[data-games-level]").innerHTML = lvl.length ? lvl.map(e => {
+      const taken = g.taken(e.id), left = Math.max(0, (e.totalSlots || 0) - taken), pct = e.totalSlots ? Math.min(100, taken / e.totalSlots * 100) : 0;
+      return `<a class="gcard" href="calender/"><span class="when">${esc(whenLabel(e))}</span><span class="t">${esc(shortTitle(e))}</span><span class="row-sub">${esc(e.location)}${e.cost ? " · ₹" + esc(e.cost) : ""}</span><span class="meter"><i style="width:${pct}%"></i></span><span class="foot"><span>${left ? left + " of " + e.totalSlots + " spots left" : "Full · join the waitlist"}</span><span class="btn-join${left ? "" : " ghost"}">${left ? "Join" : "Waitlist"}</span></span></a>`;
+    }).join("") : `<div class="empty" style="border:0">Nothing at your level this week. <a class="link" style="min-height:0" href="calender/">See all games</a></div>`;
+    // whole schedule, grouped by day
+    let lastDay = "";
+    $("sched").innerHTML = g.upcoming.length ? `<ul class="rows compact">` + g.upcoming.slice(0, 10).map(e => {
+      const d = evDate(e).toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "short" });
+      const head = d !== lastDay ? `</ul><div class="day">${esc(d)}</div><ul class="rows compact">` : ""; lastDay = d;
+      return head + gameRow(e, g.taken(e.id), left => `<span class="row-sub" style="white-space:nowrap">${time12(e.startTime)} · ${left ? `<span style="color:var(--accent)">${left} left</span>` : "Full"}</span>`).replace(esc(whenLabel(e)) + " · ", "");
+    }).join("") + `</ul>` : `<div class="empty">New games go up every week.</div>`;
+  }).catch(e => { window.DPC?.report("Home: member games", e); $("next").innerHTML = ""; document.querySelector("[data-games-level]").innerHTML = `<div class="empty">Couldn't load games. <a class="link" style="min-height:0" href="./">Retry</a></div>`; });
 
+  // ── board: the leaderboard is the source of truth for rating and rank (same as the Dashboard) ──
   boardsP.then(b => {
     const src = /break/i.test(player.venue || "") ? "breakPoint" : "firstServe";
     const list = ranked(b[src] || []), key = String(player.boardName || player.name || "").trim().toLowerCase();
     const i = list.findIndex(r => String(r.Name).trim().toLowerCase() === key);
-    const slice = i < 0 ? list.slice(0, 3) : list.slice(Math.max(0, i - 2), i + 3);
-    $("near").innerHTML = slice.length ? slice.map(r => boardRow(r, i >= 0 && r === list[i])).join("") : `<li class="empty">You'll appear after two matches.</li>`;
+    if (i >= 0) rating = paint(list[i].Rating, list[i].Ranking);
+    const show = mode => {
+      document.querySelectorAll("[data-near]").forEach(c => c.setAttribute("aria-pressed", String(c.dataset.near === mode)));
+      const rows = mode === "top" ? list.slice(0, 10) : (i < 0 ? list.slice(0, 5) : list.slice(Math.max(0, i - 2), i + 3));
+      $("near").innerHTML = rows.length ? rows.map(r => boardRow(r, i >= 0 && r === list[i])).join("") : `<li class="empty">You'll appear after two matches.</li>`;
+    };
+    document.querySelectorAll("[data-near]").forEach(c => c.addEventListener("click", () => show(c.dataset.near)));
+    show("around");
   }).catch(e => { window.DPC?.report("Home: member board", e); failed($("near"), "the board"); });
 }
 
