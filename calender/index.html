@@ -696,7 +696,7 @@ footer {
 }
 </style>
 <link rel="stylesheet" href="../tokens.css?v=3">
-<link rel="stylesheet" href="../site.css?v=2">
+<link rel="stylesheet" href="../site.css?v=3">
 </head>
 <body>
 <header class="top"><div class="wrap"><a class="wordmark" href="../" aria-label="Delhi Padel Collective, home">Delhi<b>//</b>PadelCollective</a><nav class="top-links" aria-label="Main"><a class="desk" href="../calender/" aria-current="page">Games</a><a class="desk" href="../leaderboard/">Rankings</a><a class="desk" href="../coaching/">Coaching</a><a class="desk" href="../league/">League</a><a href="../Dashboard/">Dashboard</a></nav></div></header>
@@ -832,6 +832,8 @@ function getMyRSVPs(){ try{ return JSON.parse(localStorage.getItem(LS_RSVP)||"{}
 function saveMyRSVP(id,data){ const m=getMyRSVPs(); m[id]=data; localStorage.setItem(LS_RSVP,JSON.stringify(m)); }
 function clearMyRSVP(id){ const m=getMyRSVPs(); delete m[id]; localStorage.setItem(LS_RSVP,JSON.stringify(m)); }
 function normalizePhone(phone){ return String(phone||"").replace(/[^\d+]/g,""); }
+// Level tags in their level's colour: beginners green, lower intermediate blue, intermediate terracotta, advanced plum.
+function levelColour(level){ const l=String(level||"").toLowerCase(); return /adv/.test(l)?"var(--c-mp)":/lower/.test(l)?"var(--c-fs)":/inter/.test(l)?"var(--c-bp)":/begin/.test(l)?"var(--c-green)":"var(--c-fs)"; }
 function sameEventId(a,b){ return String(a??"")===String(b??""); }
 // RSVPs from the server carry only the phone's last 4 digits (ph4); ones added on this page carry the full number.
 function samePhone(r,phone){
@@ -945,7 +947,7 @@ function cardHTML(ev,me){
     <div class="c-body">
       <div class="c-tags">
         <span class="tag tag-game">${ev.game}</span>
-        ${ev.level?`<span class="tag tag-level">${ev.level}</span>`:""}
+        ${ev.level?`<span class="tag tag-level" style="--lv:${levelColour(ev.level)}">${ev.level}</span>`:""}
         <span class="tag ${stc}">${stx}</span>
       </div>
       <div class="c-day-label">${dayLabel}</div>
