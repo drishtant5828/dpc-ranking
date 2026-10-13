@@ -381,19 +381,17 @@ body{
 }
 </style>
 <link rel="stylesheet" href="../tokens.css?v=3">
-<link rel="stylesheet" href="../site.css?v=4">
 </head>
 <body>
-<header class="top"><div class="wrap"><a class="wordmark" href="../" aria-label="Delhi Padel Collective, home">Delhi<b>//</b>PadelCollective</a><nav class="top-links" aria-label="Main"><a class="desk" href="../calender/">Games</a><a class="desk" href="../leaderboard/">Rankings</a><a class="desk" href="../coaching/">Coaching</a><a class="desk" href="../league/">League</a><a href="../Dashboard/" aria-current="page">Dashboard</a></nav></div></header>
 
 <!-- Desktop sidebar (hidden on mobile; bottom nav hides on desktop) -->
 <aside class="dash-sidebar">
   <div class="ds-brand">
-    <a class="ds-brand-name" href="../">//PadelCollective</a>
+    <a class="ds-brand-name" href="/">//PadelCollective</a>
     <div class="ds-brand-sub">Member Dashboard</div>
   </div>
   <nav class="ds-nav">
-    <a class="ds-link" href="../">
+    <a class="ds-link" href="/">
       <svg viewBox="0 0 24 24" fill="none"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><polyline points="9 21 9 12 15 12 15 21"/></svg>
       <span>Home</span>
     </a>
@@ -401,15 +399,15 @@ body{
       <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
       <span>Dashboard</span>
     </a>
-    <a class="ds-link" href="../leaderboard/">
+    <a class="ds-link" href="/leaderboard/">
       <svg viewBox="0 0 24 24" fill="none"><rect x="18" y="3" width="3" height="18"/><rect x="11" y="8" width="3" height="13"/><rect x="4" y="13" width="3" height="8"/></svg>
       <span>Leaderboard</span>
     </a>
-    <a class="ds-link" href="../calender/">
+    <a class="ds-link" href="/calender/">
       <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>
       <span>Games</span>
     </a>
-    <a class="ds-link" href="../coaching/">
+    <a class="ds-link" href="/coaching/">
       <svg viewBox="0 0 24 24" fill="none"><path d="M12 2l2.4 6.9H22l-5.8 4.3 2.2 6.8L12 16l-6.4 4 2.2-6.8L2 8.9h7.6z"/></svg>
       <span>Coaching</span>
     </a>
@@ -435,10 +433,10 @@ body{
     <div class="info-wrap" id="infoWrap">
       <button class="info-btn" onclick="toggleInfo()" title="What do these mean?">i</button>
       <div class="info-pop" id="infoPop">
-        <p><b>Rank</b> — your spot on the board, set by rating (score breaks ties).</p>
+        <p><b>Rank</b> — your spot on the board, set by Pts on the leaderboard (rating breaks ties).</p>
         <p><b>Rating</b> — your level on the 0–7 skill scale.</p>
-        <p><b>Score</b> — total match points, which feed your rating.</p>
-        <a href="../leaderboard/explainer.html">Full guide →</a>
+        <p><b>Pts</b> — your points on the leaderboard; they set your rank.</p>
+        <a href="/leaderboard/explainer.html">Full guide →</a>
       </div>
     </div>
     <button class="top-btn" onclick="handleRefresh()" id="refreshBtn" title="Refresh">
@@ -485,7 +483,7 @@ body{
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M9.5 9.5a2.5 2.5 0 0 1 4 .5M12 7v10"/></svg>
     </div>
     <div class="q-stat-value" id="statPoints">—</div>
-    <div class="q-stat-label">Points</div>
+    <div class="q-stat-label">Pts</div>
     <div class="q-stat-delta up" id="pointsTrend"></div>
   </div>
 </div>
@@ -513,7 +511,7 @@ body{
       <div style="font-size:12px;color:var(--text-secondary)" id="chartCaption">Ranking over time</div>
       <div class="chart-tabs">
         <button class="chart-tab" onclick="switchChart('rating',this)">Rating</button>
-        <button class="chart-tab" onclick="switchChart('points',this)">Score</button>
+        <button class="chart-tab" onclick="switchChart('points',this)">Pts</button>
         <button class="chart-tab active" onclick="switchChart('ranking',this)">Rank</button>
       </div>
     </div>
@@ -544,19 +542,19 @@ body{
 
 <!-- Bottom Nav -->
 <div class="bottom-nav">
-  <a class="bnav-tab" href="../coaching/">
+  <a class="bnav-tab" href="/coaching/">
     <svg viewBox="0 0 24 24"><path d="M12 2l2.4 6.9H22l-5.8 4.3 2.2 6.8L12 16l-6.4 4 2.2-6.8L2 8.9h7.6z"/></svg>
     <span>Coaching</span>
   </a>
-  <a class="bnav-tab" href="../leaderboard/">
+  <a class="bnav-tab" href="/leaderboard/">
     <svg viewBox="0 0 24 24"><rect x="18" y="3" width="3" height="18"/><rect x="11" y="8" width="3" height="13"/><rect x="4" y="13" width="3" height="8"/></svg>
     <span>Leaderboard</span>
   </a>
-  <a class="bnav-tab" href="../">
+  <a class="bnav-tab" href="/">
     <svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><polyline points="9 21 9 12 15 12 15 21"/></svg>
     <span>Home</span>
   </a>
-  <a class="bnav-tab" href="../calender/">
+  <a class="bnav-tab" href="/calender/">
     <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>
     <span>Games</span>
   </a>
@@ -582,7 +580,7 @@ const SUPABASE = { url:'https://zruqzybdpniofxbcwuat.supabase.co', anonKey:'sb_p
 const SUPABASE_READY = !SUPABASE.url.startsWith('YOUR_');
 const CACHE_PLAYER_KEY='dpcCache_player', CACHE_MATCHES_KEY='dpcCache_matches', CACHE_AT_KEY='dpcCache_savedAt', CACHE_PHONE_KEY='dpcCache_phone', CACHE_TTL=30*24*60*60*1000;
 // Bump when the stored player/matches shape or how rating/ranking is derived changes → every browser refetches once.
-const CACHE_VER_KEY='dpcCache_ver', CACHE_VERSION='2026-09-27-ratings-sheet';
+const CACHE_VER_KEY='dpcCache_ver', CACHE_VERSION='2026-10-13-pts-stat';
 const SESSION_KEY='dpcPlayerSession', SESSION_PHONE_KEY='dpcPlayerPhone', SESSION_SAVED_AT_KEY='dpcPlayerSessionSavedAt', SESSION_TTL=90*24*60*60*1000;
 
 // Once a day per device: tells the login script this player opened the Dashboard. Never blocks the page.
@@ -612,14 +610,22 @@ async function fetchLeaderboardStats(name,venue){
     const rankOf=r=>Number(r.Ranking??r.ranking??r.Rank??r.rank)||0;
     const me=list.find(r=>nameOf(r)===key);
     if(!me)return null;
-    // Ranking mirrors the board: only players with >=2 matches, renumbered by standing.
+    // Ranking mirrors the board: only players with >=2 matches. Break Point and First Serve
+    // rank by Pts (equal Pts share a rank, as on the leaderboard); other boards by standing.
     let ranking=null;
     if(matchesOf(me)>=2){
-      const qualified=list.filter(r=>matchesOf(r)>=2).sort((a,b)=>rankOf(a)-rankOf(b));
-      const idx=qualified.findIndex(r=>nameOf(r)===key);
-      if(idx>=0)ranking=idx+1;
+      const qualified=list.filter(r=>matchesOf(r)>=2);
+      if(src==='breakPoint'||src==='firstServe'){
+        const ptsOf=r=>Math.round(Number(r.Score??r.score)||0);
+        ranking=1+qualified.filter(r=>ptsOf(r)>ptsOf(me)).length;
+      }else{
+        qualified.sort((a,b)=>rankOf(a)-rankOf(b));
+        const idx=qualified.findIndex(r=>nameOf(r)===key);
+        if(idx>=0)ranking=idx+1;
+      }
     }
-    return {rating:me.Rating??me.rating, ranking};
+    const pts=me.Score??me.score;
+    return {rating:me.Rating??me.rating, ranking, pts:pts==null||pts===''?null:Math.round(Number(pts)||0)};
   }catch(e){return null;}
 }
 async function fetchFromAPI(phone){
@@ -654,13 +660,13 @@ async function fetchFromAPI(phone){
   // Leaderboard is the source of truth for rating/ranking; it also enforces the
   // >=2-match rule, so a player not on the board gets ranking=null (shows "—").
   const st=await fetchLeaderboardStats(canonName,board);
-  if(st){ok=true;if(st.rating!=null)player.rating=st.rating;player.ranking=st.ranking;player.rank=st.ranking;}
+  if(st){ok=true;if(st.rating!=null)player.rating=st.rating;player.ranking=st.ranking;player.rank=st.ranking;if(st.pts!=null)player.pts=st.pts;}
   return{player,matches,ok};
 }
 async function bootstrapDashboard(){
   const session=getValidSessionPhone();
-  if(!session){window.location.href='../login/';return;}
-  try{currentPlayer=JSON.parse(session.savedSession);}catch(e){clearStoredSession();window.location.href='../login/';return;}
+  if(!session){window.location.href='/login/';return;}
+  try{currentPlayer=JSON.parse(session.savedSession);}catch(e){clearStoredSession();window.location.href='/login/';return;}
   logVisit(session.savedPhone);
   const cached=loadCache(session.savedPhone);
   if(cached){currentPlayer=cached.player;allMatches=cached.matches;render();return;}
@@ -670,13 +676,13 @@ async function bootstrapDashboard(){
 }
 async function handleRefresh(){
   const session=getValidSessionPhone();
-  if(!session){window.location.href='../login/';return;}
+  if(!session){window.location.href='/login/';return;}
   setRefreshState(true);
   try{const{player,matches,ok}=await fetchFromAPI(session.savedPhone);lastFetchOk=ok;if(!ok){window.DPC?.report("Dashboard: refresh",new Error("No data source answered"));window.DPC?.toast("Couldn't refresh your stats. Try again.");}currentPlayer=player;allMatches=matches;clearDataCache();if(ok&&hasPlayerData(player,matches))saveCache(session.savedPhone,player,matches);render();}finally{setRefreshState(false);}
   localStorage.setItem(SESSION_KEY,JSON.stringify(currentPlayer));localStorage.setItem(SESSION_SAVED_AT_KEY,String(Date.now()));
 }
 function setRefreshState(loading){const b=document.getElementById('refreshBtn');if(!b)return;b.disabled=loading;b.classList.toggle('spinning',loading);}
-function handleLogout(){clearStoredSession();clearDataCache();sessionStorage.removeItem('dpcDemo');window.location.href='../login/';}
+function handleLogout(){clearStoredSession();clearDataCache();sessionStorage.removeItem('dpcDemo');window.location.href='/login/';}
 
 const AV_COLORS = ['#0d9488','#2563eb','#7c3aed','#d97706','#dc2626','#0891b2','#db2777','#65a30d'];
 function initialsOf(name){const p=String(name||'').trim().split(/\s+/).filter(Boolean);if(!p.length)return'?';return p.length===1?p[0].slice(0,2).toUpperCase():(p[0][0]+p[p.length-1][0]).toUpperCase();}
@@ -744,7 +750,7 @@ function renderChart(mode){
   const ctx=document.getElementById('perfChart');
   let labels,data,label,color='#2e4e8e',yReverse=false;
   const cap=document.getElementById('chartCaption');
-  if(cap)cap.textContent=(mode==='rating'?'Rating':mode==='ranking'?'Ranking':'Score')+' · monthly avg';
+  if(cap)cap.textContent=(mode==='rating'?'Rating':mode==='ranking'?'Ranking':'Pts')+' · monthly avg';
 
   let h;
   if(mode==='rating'){
@@ -754,13 +760,14 @@ function renderChart(mode){
   }else if(mode==='ranking'){
     h=monthlyAvg(parseHistory(currentPlayer?.rankingHistory||''));
     if(!h.length)return;
-    data=h.map(x=>Math.round(x.value));label='Ranking';yReverse=true;color='#2e4e8e';
+    data=h.map(x=>Math.round(x.value));label='Ranking';yReverse=true;color='#7c3aed';
   }else{
-    h=monthlyAvg(allMatches
-      .filter(m=>m.date&&String(m.matchId).toUpperCase().includes('AM'))
-      .map(m=>({d:new Date(m.date),v:Number(m.total)||0})));
+    // Pts History is recorded daily from Oct 2026; until then, just today's Pts.
+    const ph=parseHistory(currentPlayer?.ptsHistory||'');
+    if(currentPlayer?.pts!=null)ph.push({d:new Date(),v:Number(currentPlayer.pts)});
+    h=monthlyAvg(ph);
     if(!h.length)return;
-    data=h.map(x=>Math.round(x.value));label='Points';color='#d97706';
+    data=h.map(x=>Math.round(x.value));label='Pts';color='#d97706';
   }
   labels=h.map(x=>x.label);
 
@@ -1000,9 +1007,8 @@ function render(){
   document.getElementById('heroAvatar').style.background=`linear-gradient(135deg,${avColorOf(currentPlayer.name)},var(--blue))`;
   const rk=Number(currentPlayer.ranking??currentPlayer.rank);
   document.getElementById('statRank').textContent=(Number.isFinite(rk)&&rk>0)?'#'+rk:'—';
-  const summed=allMatches.reduce((s,m)=>s+(Number(m.total)||0),0);
-  const pts=summed||(currentPlayer.totalPoints??currentPlayer.points)||0;
-  document.getElementById('statPoints').textContent=pts?pts.toLocaleString():'—';
+  const pts=currentPlayer.pts;
+  document.getElementById('statPoints').textContent=pts!=null&&pts!==''?Number(pts).toLocaleString():'—';
 
   animateRing(currentPlayer.rating||0);
   renderTrends();
