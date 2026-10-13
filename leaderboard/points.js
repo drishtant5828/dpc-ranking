@@ -1,39 +1,25 @@
-// Points tab (Break Point and First Serve boards): the board ranked by score —
-// total match points — with each player's rating beside their name. It opens
-// first; the rating-based Ranking tab is still one tap away.
+// Ranking tab (Break Point and First Serve boards): ranked by score — total
+// match points — with each player's rating beside their name and the score
+// large on the right. It fills the existing Ranking panel and replaces that
+// panel's rating-ordered podium and table; the other tabs are unchanged.
 (function () {
-  const SRC = { "first-serve": ["firstServe", "rankings"], "break-point": ["breakPoint", "breakPointOverall"] }[document.body.dataset.page];
-  const switcher = document.querySelector(".tab-switcher"), firstPanel = document.querySelector(".subsection");
-  if (!SRC || !switcher || !firstPanel) return;
+  const BOARD = {
+    "first-serve": { source: "firstServe", key: "rankings", panel: "firstServeRankingPanel" },
+    "break-point": { source: "breakPoint", key: "breakPointOverall", panel: "overallPanel" },
+  }[document.body.dataset.page];
+  const panel = BOARD && document.getElementById(BOARD.panel);
+  if (!panel) return;
   const SB = { url: "https://zruqzybdpniofxbcwuat.supabase.co", key: "sb_publishable_O5kl7By_s23gMXNULck-yw_cksU-9Oy" };
   const MIN_MATCHES = 2;
 
-  const tab = document.createElement("button");
-  tab.type = "button"; tab.className = "tab-button"; tab.id = "pointsTab";
-  tab.setAttribute("role", "tab"); tab.setAttribute("aria-controls", "pointsPanel");
-  tab.textContent = "Points";
-  switcher.prepend(tab);
-
-  const panel = document.createElement("section");
-  panel.className = "subsection points-panel"; panel.id = "pointsPanel";
-  panel.setAttribute("role", "tabpanel"); panel.setAttribute("aria-labelledby", "pointsTab");
-  panel.innerHTML = `<p class="pts-note">Ranked by points from every match. Rating is shown beside each name.</p>
+  panel.classList.add("by-points");   // site.css hides the panel's old podium/table/search
+  const wrap = document.createElement("div");
+  wrap.className = "pts-wrap";
+  wrap.innerHTML = `<p class="pts-note">Ranked by points from every match. Rating is shown beside each name.</p>
     <input class="pts-search" type="search" placeholder="Search player name" aria-label="Search player name">
     <div class="pts-head" aria-hidden="true"><span>#</span><span>Player · rating</span><span>Score</span></div>
     <ol class="pts-list"><li class="pts-empty">Loading…</li></ol>`;
-  firstPanel.parentNode.insertBefore(panel, firstPanel);
-
-  function show(on) {
-    tab.classList.toggle("is-active", on);
-    tab.setAttribute("aria-selected", String(on));
-    panel.hidden = !on;
-    panel.classList.toggle("panel-hidden", !on);
-    if (!on) return;
-    switcher.querySelectorAll(".tab-button").forEach((b) => { if (b !== tab) { b.classList.remove("is-active"); b.setAttribute("aria-selected", "false"); } });
-    document.querySelectorAll(".subsection").forEach((p) => { if (p !== panel) { p.hidden = true; p.classList.add("panel-hidden"); } });
-  }
-  tab.addEventListener("click", () => show(true));
-  switcher.querySelectorAll(".tab-button").forEach((b) => { if (b !== tab) b.addEventListener("click", () => show(false)); });
+  panel.appendChild(wrap);
 
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   // Same colours as the levels on the rating explainer.
@@ -43,9 +29,11 @@
   try { me = String(JSON.parse(localStorage.getItem("dpcPlayerSession") || "{}").name || "").trim().toLowerCase(); } catch (e) {}
 
   let rows = [];
-  function render(q) {
+  const search = wrap.querySelector(".pts-search");
+  function render() {
+    const q = search.value.trim().toLowerCase();
     const list = q ? rows.filter((r) => r.name.toLowerCase().includes(q)) : rows;
-    panel.querySelector(".pts-list").innerHTML = list.length ? list.map((r) => {
+    wrap.querySelector(".pts-list").innerHTML = list.length ? list.map((r) => {
       const rating = Number(r.rating);
       return `<li class="pts-row${r.rank <= 3 ? " pts-top" : ""}${me && r.name.toLowerCase() === me ? " pts-me" : ""}">
         <span class="pts-rank">${r.rank}</span>
@@ -54,31 +42,27 @@
         <span class="pts-score">${r.score}<small>pts</small></span></li>`;
     }).join("") : `<li class="pts-empty">${q ? "No player by that name on this board." : "The board fills up after two matches."}</li>`;
   }
-  panel.querySelector(".pts-search").addEventListener("input", (e) => render(e.target.value.trim().toLowerCase()));
+  search.addEventListener("input", render);
+  // Arriving from another board's search (?q=name) pre-fills this one.
+  search.value = new URLSearchParams(location.search).get("q") || "";
 
-  fetch(`${SB.url}/rest/v1/leaderboard_cache?source=eq.${SRC[0]}&select=payload`, { headers: { apikey: SB.key, Authorization: `Bearer ${SB.key}` } })
+  fetch(`${SB.url}/rest/v1/leaderboard_cache?source=eq.${BOARD.source}&select=payload`, { headers: { apikey: SB.key, Authorization: `Bearer ${SB.key}` } })
     .then((r) => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
     .then((data) => {
-      const board = ((data[0] && data[0].payload && data[0].payload[SRC[1]]) || [])
+      const board = ((data[0] && data[0].payload && data[0].payload[BOARD.key]) || [])
         .map((x) => ({ name: String(x.Name || "").trim(), score: Math.round(Number(x.Score) || 0), rating: x.Rating, mp: Number(x["Matches played"]) || 0 }))
         .filter((x) => x.name && x.mp >= MIN_MATCHES)
         .sort((a, b) => b.score - a.score || Number(b.rating) - Number(a.rating) || a.name.localeCompare(b.name));
       board.forEach((x, i) => {   // equal points share a rank: 1, 2, 2, 4
         const prev = board[i - 1], next = board[i + 1];
         x.rank = prev && prev.score === x.score ? prev.rank : i + 1;
-        x.tied = (prev && prev.score === x.score) || (next && next.score === x.score);
+        x.tied = Boolean((prev && prev.score === x.score) || (next && next.score === x.score));
       });
       rows = board;
-      render("");
+      render();
     })
     .catch((e) => {
-      window.DPC?.report("Leaderboard: points", e);
-      panel.querySelector(".pts-list").innerHTML = `<li class="pts-empty">Couldn't load points. Pull to refresh or try again.</li>`;
+      window.DPC?.report("Leaderboard: ranking by points", e);
+      wrap.querySelector(".pts-list").innerHTML = `<li class="pts-empty">Couldn't load the ranking. Try again in a minute.</li>`;
     });
-
-  // Open on Points, unless someone arrived with a search (?q=…), which belongs to the Ranking tab.
-  if (!new URLSearchParams(location.search).get("q")) {
-    show(true);
-    document.addEventListener("DOMContentLoaded", () => setTimeout(() => show(true), 0));
-  }
 })();

@@ -158,8 +158,9 @@ body > header:not(.top):not(.topbar){display:none!important}   /* the old per-pa
 .tag-level{color:var(--lv,var(--c-fs))!important;border-color:color-mix(in srgb,var(--lv,var(--c-fs)) 35%,transparent)!important;background:color-mix(in srgb,var(--lv,var(--c-fs)) 8%,transparent)!important}
 .btn-join{background:var(--c-green)!important;border-color:var(--c-green)!important}
 
-/* ── Points tab ── */
-.points-panel{padding-top:8px}
+/* ── Ranking tab, by points (leaderboard/points.js) ── */
+.by-points>:not(.pts-wrap):not(.subsection-head){display:none!important}
+.pts-wrap{padding-top:4px}
 .pts-note{font-size:13px;color:var(--text-secondary);margin:4px 0 12px}
 .pts-search{width:100%;margin-bottom:8px}
 .pts-head{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:10px;font-size:12px;color:var(--text-secondary);padding:8px 0 6px;border-bottom:1px solid var(--line)}
