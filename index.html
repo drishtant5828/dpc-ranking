@@ -141,11 +141,6 @@ footer nav a{min-height:32px;display:inline-flex;align-items:center}
 }
 [hidden]{display:none!important}
 /* ── colour (venue and level colours from site.css) ── */
-.facts>div:nth-child(1) .num{color:var(--c-fs)}
-.facts>div:nth-child(2) .num{color:var(--c-bp)}
-.facts>div:nth-child(3) .num{color:var(--c-green)}
-.facts>div:nth-child(4) .num{color:var(--c-mp)}
-.v-numbers{background:var(--tint-blue);border-top:0!important}
 .v-paths{background:var(--tint-warm)}
 .paths .path{border-top:4px solid var(--pc)}
 .path .label{color:var(--pc)}
@@ -177,10 +172,6 @@ footer nav a{min-height:32px;display:inline-flex;align-items:center}
 .v-head{display:grid;gap:12px;margin-bottom:36px;max-width:720px;align-content:start}
 .v-h2,.v-head h2{font-family:var(--font-display);font-weight:700;font-size:clamp(30px,3.6vw,42px);line-height:1.08;letter-spacing:-.01em}
 .v-head p{color:var(--text-secondary);max-width:36em}
-.facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:32px 24px}
-@media(min-width:800px){.facts{grid-template-columns:repeat(4,minmax(0,1fr))}}
-.num{display:block;font-family:var(--font-display);font-weight:700;font-size:clamp(40px,4.4vw,56px);line-height:1;color:var(--accent);font-variant-numeric:lining-nums tabular-nums}
-.facts p{margin-top:10px;font-size:14px;color:var(--text-secondary);max-width:16em}
 .paths{display:grid;gap:12px}
 @media(min-width:900px){.paths{grid-template-columns:repeat(3,minmax(0,1fr))}}
 .path{display:flex;flex-direction:column;gap:10px;align-items:flex-start;padding:26px 22px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius)}
@@ -284,15 +275,6 @@ footer nav a{min-height:32px;display:inline-flex;align-items:center}
         </div>
       </div>
       <figure class="photo v-hero-photo"><img src="img/court.jpg" alt="Two DPC players high-five across the net" width="1200" height="800" fetchpriority="high"></figure>
-    </div>
-  </section>
-
-  <section class="v-sec v-numbers" aria-label="DPC in numbers">
-    <div class="wrap facts">
-      <div><span class="num">1,000+</span><p>players in the community</p></div>
-      <div><span class="num">4+</span><p>events every week</p></div>
-      <div><span class="num" id="statEvents">70</span><p>events played and rated</p></div>
-      <div><span class="num" id="statPlayers">140+</span><p>players on the rankings</p></div>
     </div>
   </section>
 
@@ -541,8 +523,6 @@ const failed = (el, what) => { el.innerHTML = `<li class="empty">Couldn't load $
 
 // ── A · visitors ──
 function renderVisitor() {
-  // Every event ever played (match ids only, no names or phones).
-  sbRpc("dashboard_match_ids", {}).then(ids => { $("statEvents").textContent = ids.length; }).catch(() => {});
   $("member").hidden = true;
   $("visitor").hidden = false;
   gamesP.then(g => {
@@ -555,8 +535,6 @@ function renderVisitor() {
   }).catch(e => { window.DPC?.report("Home: games", e); failed(document.querySelector("[data-games]"), "this week's games"); });
 
   boardsP.then(b => {
-    const names = new Set([...ranked(b.breakPoint || []), ...ranked(b.firstServe || [])].map(r => String(r.Name).toLowerCase()));
-    $("statPlayers").textContent = names.size;
     const show = src => {
       document.querySelectorAll("[data-board]").forEach(c => c.setAttribute("aria-pressed", String(c.dataset.board === src)));
       const top = ranked(b[src] || []).slice(0, 5);
