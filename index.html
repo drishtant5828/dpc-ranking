@@ -354,6 +354,25 @@
   .section-body { font-size: 15px; color: rgba(0,0,0,.38); line-height: 1.85; font-weight: 300; max-width: 520px; }
   .divider { height: 1px; background: var(--border-soft); margin: 0 40px; }
 
+  /* ── DPL: the League, presented in the page's own centred, editorial voice ── */
+  #dpl { background: var(--bg); text-align: center; padding: 112px 40px; }
+  .dpl-inner { max-width: 720px; margin: 0 auto; }
+  .dpl-crest { width: 64px; height: 64px; border-radius: 50%; clip-path: circle(48.5%); margin: 0 auto 24px; display: block; }
+  .dpl-inner .section-title { margin-bottom: 28px; }
+  .dpl-dates { display: inline-flex; flex-wrap: wrap; justify-content: center; gap: 4px 0; margin: 0 auto 36px; padding: 12px 0; border-top: 1px solid var(--border-soft); border-bottom: 1px solid var(--border-soft); font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: rgba(0,0,0,.5); }
+  .dpl-dates span { padding: 0 18px; }
+  .dpl-dates span + span { border-left: 1px solid var(--border-soft); }
+  .dpl-dates b { color: var(--text); font-weight: 600; }
+  .dpl-btn { display: inline-flex; align-items: center; gap: 10px; padding: 18px 40px; border-radius: 100px; background: #1f3d2c; color: #f1ece0; font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; text-decoration: none; transition: background .22s, transform .22s, box-shadow .22s; }
+  .dpl-btn:hover { background: #163f29; transform: translateY(-2px); box-shadow: 0 8px 32px rgba(31,61,44,.18); }
+  .dpl-link { display: block; width: fit-content; margin: 18px auto 0; font-size: 13px; color: #1f3d2c; text-underline-offset: 4px; }
+  @media (max-width: 768px) {
+    #dpl { padding: 72px 24px; }
+    .dpl-dates { display: grid; gap: 6px; padding: 12px 8px; }
+    .dpl-dates span { padding: 0; }
+    .dpl-dates span + span { border-left: 0; }
+  }
+
   /* ── ABOUT ── */
   #about { background: var(--bg); }
   .about-grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
@@ -640,6 +659,18 @@ video::-webkit-media-controls-fullscreen-button {
   <div class="scroll-hint">
     <div class="scroll-arrow"></div>
     Scroll
+  </div>
+</section>
+
+<!-- DELHI PADEL LEAGUE -->
+<section id="dpl" aria-labelledby="dplTitle">
+  <div class="dpl-inner">
+    <img class="dpl-crest" src="/img/crest.jpg" alt="Delhi Padel League crest" width="64" height="64" loading="lazy">
+    <div class="section-eyebrow">Delhi Padel League · Season One</div>
+    <h2 class="section-title" id="dplTitle">Eight franchises.<br>One champion.</h2>
+    <p class="dpl-dates"><span><b>20–22 Nov</b> · Group stage</span><span><b>28–29 Nov</b> · Semis &amp; Finals</span><span>New Delhi</span></p>
+    <div><a class="dpl-btn" href="/league/register/?utm_source=dpc_home">Register to play →</a></div>
+    <a class="dpl-link" href="/league/?utm_source=dpc_home">Explore the league</a>
   </div>
 </section>
 
