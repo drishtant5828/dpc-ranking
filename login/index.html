@@ -83,11 +83,11 @@
   }
   .left-bg-img {
     position: absolute; inset: 0;
-    background-image: url('../img/court.jpg');
+    background-image: url('fallback.jpeg');
     background-size: cover;
     background-position: center;
     z-index: 0;
-    filter: brightness(.6);
+    filter: brightness(.55) saturate(.8);
     transition: transform 8s ease;
   }
   .left-panel:hover .left-bg-img { transform: scale(1.04); }
@@ -104,8 +104,8 @@
     position: relative; z-index: 2;
   }
   .left-eyebrow {
-    font-size: 11px; font-weight: 500; letter-spacing: .14em;
-    text-transform: uppercase; color: rgba(255,255,255,.7);
+    font-size: 9px; font-weight: 600; letter-spacing: 4px;
+    text-transform: uppercase; color: rgba(255,255,255,.45);
     margin-bottom: 16px;
   }
   .left-title {
@@ -118,8 +118,8 @@
     margin-bottom: 20px;
   }
   .left-body {
-    font-size: 15px; color: rgba(255,255,255,.78);
-    line-height: 1.65; font-weight: 400;
+    font-size: 14px; color: rgba(255,255,255,.45);
+    line-height: 1.75; font-weight: 300;
     max-width: 340px;
   }
   .left-stats {
@@ -128,14 +128,14 @@
   .stat-item {}
   .stat-num {
     font-family: var(--font-heading);
-    font-size: 34px; font-weight: 700;
-    color: #fff;
+    font-size: 28px; font-weight: 400;
+    color: rgba(255,255,255,.85);
     letter-spacing: -0.5px;
   }
   .stat-label {
-    font-size: 12px; font-weight: 400;
-    letter-spacing: 0; text-transform: none;
-    color: rgba(255,255,255,.7);
+    font-size: 9px; font-weight: 600;
+    letter-spacing: 2.5px; text-transform: uppercase;
+    color: rgba(255,255,255,.35);
     margin-top: 2px;
   }
 
@@ -374,9 +374,8 @@
   }
 </style>
 <link rel="stylesheet" href="../tokens.css?v=3">
-<link rel="stylesheet" href="../site.css?v=4">
 </head>
-<body class="page-login">
+<body>
 
 <!-- SVG LOGO SYMBOL (same as main site) -->
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
@@ -388,8 +387,10 @@
 
 <!-- NAV -->
 <nav id="navbar">
-  <a class="nav-logo wordmark" href="../" aria-label="Delhi Padel Collective, home">Delhi<b>//</b>PadelCollective</a>
-  <a class="nav-back" href="../">
+  <a class="nav-logo" href="/">
+    <svg xmlns="http://www.w3.org/2000/svg"><use href="#dpc-logo"/></svg>
+  </a>
+  <a class="nav-back" href="/">
     <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
       <path d="M10 3L5 8l5 5"/>
     </svg>
@@ -405,23 +406,23 @@
     <div class="left-bg-img"></div>
     <div class="left-overlay"></div>
     <div class="left-content">
-      <div class="left-eyebrow">Delhi NCR · since February 2026</div>
+      <div class="left-eyebrow">Delhi · India</div>
       <div class="left-title">Track your<br/>game.</div>
       <p class="left-body">
-        Your rating, rank and every match you've played, in one place. Log in to see where you stand.
+        Your rankings, match history, and points — all in one place. Log in to see where you stand in the collective.
       </p>
       <div class="left-stats">
         <div class="stat-item">
           <div class="stat-num">1,000+</div>
-          <div class="stat-label">in the community</div>
+          <div class="stat-label">Active Players</div>
         </div>
         <div class="stat-item">
-          <div class="stat-num" id="statEvents">70+</div>
-          <div class="stat-label">events played</div>
+          <div class="stat-num">120+</div>
+          <div class="stat-label">Events</div>
         </div>
         <div class="stat-item">
-          <div class="stat-num" id="statRanked">140+</div>
-          <div class="stat-label">ranked players</div>
+          <div class="stat-num">Est. 2026</div>
+          <div class="stat-label">Delhi NCR</div>
         </div>
       </div>
     </div>
@@ -563,7 +564,7 @@
         </div>
 
         <div style="margin-top:24px;">
-          <a href="../leaderboard/" style="font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);text-decoration:none;">
+          <a href="/leaderboard/" style="font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);text-decoration:none;">
             View Full Leaderboard →
           </a>
         </div>
@@ -576,20 +577,6 @@
 </div>
 
 <script>
-// Live numbers for the left panel: events played (match ids only) and players on the two boards.
-(function liveStats() {
-  const SB = { url: "https://zruqzybdpniofxbcwuat.supabase.co", key: "sb_publishable_O5kl7By_s23gMXNULck-yw_cksU-9Oy" };
-  const h = { apikey: SB.key, Authorization: "Bearer " + SB.key, "Content-Type": "application/json" };
-  fetch(SB.url + "/rest/v1/rpc/dashboard_match_ids", { method: "POST", headers: h, body: "{}" })
-    .then(r => r.ok ? r.json() : Promise.reject()).then(ids => { if (ids.length) document.getElementById("statEvents").textContent = ids.length; }).catch(() => {});
-  fetch(SB.url + "/rest/v1/leaderboard_cache?select=payload&source=in.(breakPoint,firstServe)", { headers: h })
-    .then(r => r.ok ? r.json() : Promise.reject()).then(rows => {
-      const names = new Set();
-      rows.forEach(r => (r.payload.breakPointOverall || r.payload.rankings || []).forEach(p => { if (p.Ranking !== "" && p.Ranking != null) names.add(String(p.Name).toLowerCase()); }));
-      if (names.size) document.getElementById("statRanked").textContent = names.size;
-    }).catch(() => {});
-})();
-
 // ─── CONFIG ───────────────────────────────────────────────
 const PLAYERS_API  = 'https://script.google.com/macros/s/AKfycbxBKSqH8hrrf_8K55R1jOZm8g7tY4phD0pL_dSLgV3_0eSaI05kMGGAur5EhWDLCSyN/exec';
 const MATCHES_API  = 'https://script.google.com/macros/s/AKfycbxxg8sKLWTWvnLcHuBONDC1Q5M8nksdrM6xC2dFBDVfNEi7kJmIstK1wnh_xvF5MqXYvA/exec';
@@ -894,5 +881,6 @@ document.addEventListener('keydown', e => {
 redirectIfLoggedIn();
 </script>
 
+<script src="/site-footer.js?v=3" defer></script>
 </body>
 </html>
